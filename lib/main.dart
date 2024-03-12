@@ -1,5 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:smart_memories/theme/colors.dart';
+import 'package:smart_memories/theme/textThemes.dart';
+
 import 'package:smart_memories/pages/gallery.dart';
+
 
 void main() {
   runApp(const MyApp());
@@ -11,13 +15,24 @@ class MyApp extends StatelessWidget {
   // This widget is the root of your application.
   @override
   Widget build(BuildContext context) {
-    return const MaterialApp(
+    return MaterialApp(
       title: 'Smart Memories',
+      theme: ThemeData(
+        brightness: Brightness.light,
+        useMaterial3: true,
+        primarySwatch: Colors.purple,
+        textTheme: textTheme,
+        colorScheme: lightColorScheme,
+      ),
+      darkTheme: ThemeData(
+        brightness: Brightness.dark,
+        useMaterial3: true,
+        primarySwatch: Colors.purple,
+        textTheme: textTheme,
+        colorScheme: darkColorScheme,
+      ),
       debugShowCheckedModeBanner: false,
-      home: Gallery(),
+      home: const Gallery(),
     );
   }
-
-
-  
 }
