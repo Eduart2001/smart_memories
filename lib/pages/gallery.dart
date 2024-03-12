@@ -3,18 +3,24 @@ import 'package:flutter/material.dart';
 import 'dart:io';
 import 'dart:async';
 import 'package:image_picker/image_picker.dart';
+import 'package:exif/exif.dart';
+import 'package:path/path.dart';
+import 'package:permission_handler/permission_handler.dart';
 
+//natif exif
+//import 'package:xmp/xmp.dart';  
+
+import 'package:smart_memories/source/image-rename.dart';
 
 class Gallery extends StatefulWidget {
   const Gallery({Key? key}) : super(key: key);
 
   @override
   State<StatefulWidget> createState() =>_GalleryState();
-  
 }
 
 class _GalleryState extends State<Gallery>{
- List <XFile>?imageFileList=[];
+ List <File>?imageFileList=[];
  Widget build(BuildContext context) {
     return Scaffold(
       appBar: appBar(context),
@@ -30,7 +36,8 @@ class _GalleryState extends State<Gallery>{
                   ),
                   itemCount: imageFileList!.length,
                   itemBuilder: (BuildContext context, int index){
-                    return Image.file(File(imageFileList![index].path));
+                    File f = imageFileList![index];
+                    return Image.file(f);
                   }
                 ),
               ),
@@ -67,16 +74,19 @@ class _GalleryState extends State<Gallery>{
     );
   }
   Future<void> _pickImage(BuildContext context) async {
+    var status=await Permission.storage.request();
     final ImagePicker _picker = ImagePicker();
-    final List<XFile>? images = await _picker.pickMultiImage();
-    if (images!.isNotEmpty) {
-      imageFileList!.addAll(images);
+    final List<XFile>? images = await _picker.pickMultipleMedia();
+
+    for (XFile element in images!) {
+      File imageFile = File(element.path);
+      File renamed =await renameImage(imageFile);
+      imageFileList!.add(renamed);
     }
     setState(() {
 
     });
   }
-
 }
 
 
