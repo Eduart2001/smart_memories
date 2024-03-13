@@ -1,19 +1,15 @@
 // ignore_for_file: prefer_const_constructors
 import 'package:flutter/material.dart';
 import 'dart:io';
-import 'dart:async';
-import 'package:image_picker/image_picker.dart';
-import 'package:exif/exif.dart';
-import 'package:path/path.dart';
-import 'package:permission_handler/permission_handler.dart';
+import 'package:smart_memories/controllers/galleryControler.dart';
 
 //natif exif
-//import 'package:xmp/xmp.dart';  
+//import 'package:xmp/xmp.dart';
 
 import 'package:smart_memories/source/image-rename.dart';
 
 class Gallery extends StatefulWidget {
-  const Gallery({Key? key}) : super(key: key);
+  const Gallery({super.key});
 
   @override
   State<StatefulWidget> createState() =>_GalleryState();
@@ -24,6 +20,7 @@ class _GalleryState extends State<Gallery>{
  Widget build(BuildContext context) {
     return Scaffold(
       appBar: appBar(),
+      floatingActionButton: floatingActionButton(),
       body: Center(
         child : Column(
           children: <Widget>[
@@ -42,18 +39,6 @@ class _GalleryState extends State<Gallery>{
                 ),
               ),
             ),
-            SizedBox(height: 30.0,),
-            MaterialButton(
-              onPressed: () => _pickImage(),
-              child: Text(
-                'Add images',
-                style: TextStyle(
-                    color: Colors.black,
-                    fontSize: 16,
-                    fontWeight: FontWeight.bold
-                ),
-              ),
-            )
           ],
         ),
       ),
@@ -75,23 +60,9 @@ class _GalleryState extends State<Gallery>{
     );
   }
 
-  Future<void> _pickImage() async {
-    var status=await Permission.storage.request();
-    final ImagePicker _picker = ImagePicker();
-    final List<XFile>? images = await _picker.pickMultipleMedia();
-
-    for (XFile element in images!) {
-      File imageFile = File(element.path);
-      File renamed =await renameImage(imageFile);
-      imageFileList!.add(renamed);
-    }
-    setState(() {
-    });
-  }
-
  FloatingActionButton floatingActionButton() {
    return FloatingActionButton(
-     onPressed: () => _pickImage(),
+     onPressed: () => pickImage(imageFileList),
      tooltip: "Add a photo",
      child: Icon(Icons.add_a_photo_outlined),
    );
