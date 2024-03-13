@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:smart_memories/theme/colors.dart';
 import 'package:smart_memories/theme/textThemes.dart';
 
-import 'package:smart_memories/pages/gallery.dart';
+import 'package:smart_memories/views/pages/gallery.dart';
 
 
 void main() {

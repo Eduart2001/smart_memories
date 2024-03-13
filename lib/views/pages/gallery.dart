@@ -23,7 +23,7 @@ class _GalleryState extends State<Gallery>{
  List <File>?imageFileList=[];
  Widget build(BuildContext context) {
     return Scaffold(
-      appBar: appBar(context),
+      appBar: appBar(),
       body: Center(
         child : Column(
           children: <Widget>[
@@ -44,7 +44,7 @@ class _GalleryState extends State<Gallery>{
             ),
             SizedBox(height: 30.0,),
             MaterialButton(
-              onPressed: () => _pickImage(context),
+              onPressed: () => _pickImage(),
               child: Text(
                 'Add images',
                 style: TextStyle(
@@ -59,7 +59,8 @@ class _GalleryState extends State<Gallery>{
       ),
     );
   }
-  AppBar appBar(BuildContext context) {
+
+  AppBar appBar() {
     return AppBar(
       title: Text(
         'Gallery',
@@ -73,7 +74,8 @@ class _GalleryState extends State<Gallery>{
       centerTitle: true,
     );
   }
-  Future<void> _pickImage(BuildContext context) async {
+
+  Future<void> _pickImage() async {
     var status=await Permission.storage.request();
     final ImagePicker _picker = ImagePicker();
     final List<XFile>? images = await _picker.pickMultipleMedia();
@@ -84,12 +86,14 @@ class _GalleryState extends State<Gallery>{
       imageFileList!.add(renamed);
     }
     setState(() {
-
     });
   }
+
+ FloatingActionButton floatingActionButton() {
+   return FloatingActionButton(
+     onPressed: () => _pickImage(),
+     tooltip: "Add a photo",
+     child: Icon(Icons.add_a_photo_outlined),
+   );
+ }
 }
-
-
-
-
-

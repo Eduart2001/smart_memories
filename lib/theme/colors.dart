@@ -42,45 +42,45 @@ ColorScheme lightColorScheme = const ColorScheme(
   brightness: Brightness.light,
 );
 
-//todo : pick colors for dark theme
+
 ColorScheme darkColorScheme = const ColorScheme(
-  primary:Color(0xffffffff),
-  onPrimary: Color(0xffffffff),
-  primaryContainer: Color(0xffffffff),
-  onPrimaryContainer: Color(0xffffffff),
+  primary:Color(0xffcfbcff),
+  onPrimary: Color(0xff381e72),
+  primaryContainer: Color(0xff4f378a),
+  onPrimaryContainer: Color(0xffe9ddff),
 
-  secondary: Color(0xffffffff),
-  onSecondary: Color(0xffffffff),
-  secondaryContainer: Color(0xffffffff),
-  onSecondaryContainer: Color(0xffffffff),
+  secondary: Color(0xffcbc2db),
+  onSecondary: Color(0xff332d41),
+  secondaryContainer: Color(0xff4a4458),
+  onSecondaryContainer: Color(0xffe8def8),
 
-  tertiary: Color(0xffffffff),
-  onTertiary: Color(0xffffffff),
-  tertiaryContainer: Color(0xffffffff),
-  onTertiaryContainer: Color(0xffffffff),
+  tertiary: Color(0xffefb8c8),
+  onTertiary: Color(0xff4a2532),
+  tertiaryContainer: Color(0xff633b48),
+  onTertiaryContainer: Color(0xffffd9e3),
 
-  error: Color(0xffffffff),
-  onError: Color(0xffffffff),
-  errorContainer: Color(0xffffffff),
-  onErrorContainer: Color(0xffffffff),
+  error: Color(0xffffb4ab),
+  onError: Color(0xff690005),
+  errorContainer: Color(0xff93000a),
+  onErrorContainer: Color(0xffffb4ab),
 
-  surface: Color(0xffffffff),
-  onSurface: Color(0xffffffff),
-  surfaceVariant:  Color(0xffffffff),
-  onSurfaceVariant: Color(0xffffffff),
-  surfaceTint: Color(0xffffffff),
+  surface: Color(0xff1c1b1e),
+  onSurface: Color(0xffe6e1e6),
+  surfaceVariant:  Color(0xff49454e),
+  onSurfaceVariant: Color(0xffcac4cf),
+  surfaceTint: Color(0xffcfbcff),
 
-  outline: Color(0xffffffff),
-  outlineVariant: Color(0xffffffff),
+  outline: Color(0xff948f99),
+  outlineVariant: Color(0xff49454e),
 
-  inverseSurface: Color(0xffffffff),
-  onInverseSurface: Color(0xffffffff),
-  inversePrimary: Color(0xffffffff),
+  inverseSurface: Color(0xffe6e1e6),
+  onInverseSurface: Color(0xff313033),
+  inversePrimary: Color(0xff6750a4),
 
-  background: Color(0xffffffff),
-  onBackground: Color(0xffffffff),
-  scrim: Color(0xffffffff),
-  shadow: Color(0xffffffff),
+  background: Color(0xff1c1b1e),
+  onBackground: Color(0xffe6e1e6),
+  scrim: Color(0xff000000),
+  shadow: Color(0xff000000),
 
   brightness: Brightness.dark,
 );
