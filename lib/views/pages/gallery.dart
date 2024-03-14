@@ -1,12 +1,7 @@
 // ignore_for_file: prefer_const_constructors
 import 'package:flutter/material.dart';
 import 'dart:io';
-import 'package:smart_memories/controllers/galleryControler.dart';
-
-//natif exif
-//import 'package:xmp/xmp.dart';
-
-import 'package:smart_memories/source/image-rename.dart';
+import 'package:smart_memories/controllers/galleryController.dart';
 
 class Gallery extends StatefulWidget {
   const Gallery({super.key});
@@ -17,7 +12,9 @@ class Gallery extends StatefulWidget {
 
 class _GalleryState extends State<Gallery>{
  List <File>?imageFileList=[];
- Widget build(BuildContext context) {
+
+ @override
+  Widget build(BuildContext context) {
     return Scaffold(
       appBar: appBar(),
       floatingActionButton: floatingActionButton(),
@@ -45,16 +42,15 @@ class _GalleryState extends State<Gallery>{
     );
   }
 
+ void updateGallery(File image) {
+   setState(() {
+     imageFileList!.add(image);
+   });
+ }
+
   AppBar appBar() {
     return AppBar(
-      title: Text(
-        'Gallery',
-        style: TextStyle(
-            color: Colors.black,
-            fontSize: 24,
-            fontWeight: FontWeight.bold),
-      ),
-      backgroundColor: Colors.white,
+      title: Text('Gallery'),
       elevation: 0.0,
       centerTitle: true,
     );
@@ -62,9 +58,11 @@ class _GalleryState extends State<Gallery>{
 
  FloatingActionButton floatingActionButton() {
    return FloatingActionButton(
-     onPressed: () => pickImage(imageFileList),
+     onPressed: () {
+       pickImage(updateGallery);
+     },
      tooltip: "Add a photo",
-     child: Icon(Icons.add_a_photo_outlined),
+     child: Icon(Icons.add_photo_alternate_outlined),
    );
  }
 }
