@@ -25,15 +25,3 @@ class InformationTile extends StatelessWidget {
     );
   }
 }
-
-/*
-todo : a utiliser comme ceci dans /views/pages/imageDetails.dart pour lister les data décryptées
-InfoTile(
-  category: 'Appareil',
-  details: {
-    'Modèle': 'Nikon D5200',
-    'Ouverture': 'f1.8',
-    // Ajoutez plus de détails ici
-  },
-)
- */

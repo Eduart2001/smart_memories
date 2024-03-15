@@ -2,6 +2,7 @@
 import 'package:flutter/material.dart';
 import 'dart:io';
 import 'package:smart_memories/controllers/galleryController.dart';
+import 'package:smart_memories/views/pages/imageDetails.dart';
 
 class Gallery extends StatefulWidget {
   const Gallery({super.key});
@@ -14,33 +15,47 @@ class _GalleryState extends State<Gallery>{
  List <File>?imageFileList=[];
 
  @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: appBar(),
-      floatingActionButton: floatingActionButton(),
-      body: Center(
-        child : Column(
-          children: <Widget>[
-            Expanded(
-              child: Padding(
-                padding: const EdgeInsets.all(8.0),
-                child: GridView.builder(
-                  gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-                    crossAxisCount: 3,
-                  ),
-                  itemCount: imageFileList!.length,
-                  itemBuilder: (BuildContext context, int index){
-                    File f = imageFileList![index];
-                    return Image.file(f);
-                  }
-                ),
-              ),
-            ),
-          ],
-        ),
-      ),
-    );
-  }
+ Widget build(BuildContext context) {
+   return Scaffold(
+     appBar: appBar(),
+     floatingActionButton: floatingActionButton(),
+     body: Center(
+       child : Column(
+         children: <Widget>[
+           Expanded(
+             child: Padding(
+               padding: const EdgeInsets.all(8.0),
+               child: GridView.builder(
+                   gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+                     crossAxisCount: 3,
+                   ),
+                   itemCount: imageFileList!.length,
+                   itemBuilder: (BuildContext context, int index){
+                     File f = imageFileList![index];
+                     return GestureDetector(
+                       onTap: () {
+                         Navigator.push(
+                           context,
+                           MaterialPageRoute(
+                             builder: (context) => ImageDetails(imageFile: f),
+                           ),
+                         );
+                       },
+                       child: Image.file(
+                         f,
+                         fit: BoxFit.cover,
+                       ),
+                     );
+                   }
+               ),
+             ),
+           ),
+         ],
+       ),
+     ),
+   );
+ }
+
 
  void updateGallery(File image) {
    setState(() {
