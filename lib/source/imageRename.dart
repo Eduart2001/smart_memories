@@ -1,5 +1,6 @@
   import 'package:exif/exif.dart';
   import 'package:path/path.dart';
+  // import './imageDetailsGetter.dart';
   import 'dart:io';
   import 'dart:async';
   
@@ -25,3 +26,21 @@ class imageRename {
   }
 }
 
+void main(List<String> args) {
+  print("ok");
+  final test_path = Directory.current.path + "\\test\\test-images\\";
+  print(test_path);
+  // final directory = Directory(test_path);
+  // final files = directory.listSync();
+  // for (final file in files) {
+  //   print(file.path);
+  // }
+  final file = File(test_path + "test.jpg");
+  // print(file.path);
+  // printExifOf(test_path + "test.jpg");
+  // var data = imageExifDetailsGetter(test_path + "test.jpg");
+  // for (final entry in data.entries) {
+  //     print("${entry.key}: ${entry.value}");
+  //   }
+  file.rename(test_path + "test2.jpg");
+}
