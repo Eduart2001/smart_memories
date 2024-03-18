@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'dart:io';
 import 'package:smart_memories/controllers/galleryController.dart';
 import 'package:smart_memories/views/pages/imageDetails.dart';
+import '../../source/imageRename.dart';
 
 class Gallery extends StatefulWidget {
   const Gallery({super.key});
@@ -18,6 +19,7 @@ class _GalleryState extends State<Gallery>{
  Widget build(BuildContext context) {
    return Scaffold(
      appBar: appBar(),
+    //  floatingActionButton: testButton(), // pour tester le rename décommenter ce boutton et commencer celui d'en bas
      floatingActionButton: floatingActionButton(),
      body: Center(
        child : Column(
@@ -70,6 +72,16 @@ class _GalleryState extends State<Gallery>{
       centerTitle: true,
     );
   }
+
+ FloatingActionButton testButton() {
+  return FloatingActionButton(
+     onPressed: () {
+       test_function();
+     },
+     tooltip: "Add a photo",
+     child: Icon(Icons.add_photo_alternate_outlined),
+   );
+ }
 
  FloatingActionButton floatingActionButton() {
    return FloatingActionButton(
