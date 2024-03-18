@@ -6,6 +6,7 @@ import 'dart:io';
 import 'package:smart_memories/views/components/informationTile.dart';
 import 'package:smart_memories/controllers/imageDetailsController.dart';
 
+
 class ImageDetails extends StatefulWidget {
   final File imageFile;
   const ImageDetails({super.key, required this.imageFile});

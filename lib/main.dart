@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:smart_memories/theme/colors.dart';
 import 'package:smart_memories/theme/textTheme.dart';
 
-import 'package:smart_memories/views/pages/gallery.dart';
+import 'package:smart_memories/views/pages/homePage.dart';
 
 
 void main() {
@@ -32,7 +32,7 @@ class MyApp extends StatelessWidget {
         colorScheme: darkColorScheme,
       ),
       debugShowCheckedModeBanner: false,
-      home: const Gallery(),
+      home: const HomePage(),
     );
   }
 }
