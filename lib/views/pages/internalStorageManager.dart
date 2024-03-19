@@ -57,7 +57,7 @@ class _InternalStorage extends State<InternalStorage> {
                          DateTime date = (await entity.stat()).modified;
                       } else {
                         // delete a file
-                         await entity.delete();
+                        //await entity.delete();
 
                         // rename a file
                         //await entity.rename("newPath");
@@ -98,11 +98,13 @@ class _InternalStorage extends State<InternalStorage> {
                   for (var element in entities) {
                     if(FileManager.isFile(element)){
                       renameImage(entities);
+                      controller.openDirectory(controller.getCurrentDirectory);
+                      //Navigator.pushReplacement(context);
                       break;
                     }
                   }
                 },
-                child: Text("rename"),
+                child: Text("Rename"),
               ),
             ),
             SizedBox(
@@ -111,8 +113,14 @@ class _InternalStorage extends State<InternalStorage> {
             ),
             Expanded(
               child: OutlinedButton(
-                onPressed: () {},
-                child: Text("NNNNNN"),
+                onPressed: () {
+                  for (var element in entities) {
+                    if(FileManager.isFile(element)){
+                      duplicatesImage(entities);
+                      break;
+                    }
+                  }},
+                child: Text("Duplicates"),
               ),
             ),
           ],

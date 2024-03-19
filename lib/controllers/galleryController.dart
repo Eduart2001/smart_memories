@@ -5,7 +5,7 @@ import 'dart:io';
 import 'package:exif/exif.dart';
 
 import 'package:smart_memories/source/imageRename.dart';
-
+import 'package:smart_memories/source/duplicates.dart';
 
 Future<void> pickImage(Function updateGallery) async {
   var status=await Permission.manageExternalStorage.request();
@@ -39,21 +39,46 @@ Future<void> renameImage(List<FileSystemEntity> entities) async {
       File imageFile = File(element.path);
       final fileBytes = imageFile.readAsBytesSync();
       final data = await readExifFromBytes(fileBytes);
- 
+      String currentName=element.path;
+      
        if(!data.isEmpty){
          List format= (element.path.split("."));
          String name = "${data['EXIF DateTimeOriginal'].toString().replaceAll(':', '_').replaceAll(' ','_')}"; 
          String endString=".${format[format.length-1]}";
+         int index =1;
          if(validName.containsKey(name)){
-            int index=validName[name];
-            imageFile.rename(element.parent.path+"/"+name+"_"+index.toString()+endString);
-            validName[name]=index+1;
+            index=validName[name];
+            String newName = element.parent.path+"/"+name+"_"+index.toString()+endString;
+            if(currentName!=newName){
+              imageFile.rename(newName);
+              validName[name]=index+1;
+            }
+
          }else{
-            imageFile.rename(element.parent.path+"/"+name+endString);
-            validName[name]=1;
+       
+            String newName = element.parent.path+"/"+name+endString;
+            print(currentName==newName);
+            if(currentName!=newName){
+              imageFile.rename(newName);
+              validName[name]=index;
+            }
          }
        };
     }
 
   }
+}
+
+Future<void> duplicatesImage(List<FileSystemEntity> entities) async {
+  List<FileSystemEntity> duplicatesList=[];
+  for (var i = entities.length-1; i>=0; i--) {
+    if(FileManager.isDirectory(entities[i])||duplicatesList.contains(entities[i]))break;
+    for (var j = i-1; j >=0; j--) {
+      
+      if(FileManager.isFile(entities[j])&&await duplicates(File(entities[i].path), File(entities[j].path))){
+        duplicatesList.add(entities[j]);
+      }
+    }
+  }
+  print(duplicatesList);
 }
