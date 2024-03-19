@@ -1,4 +1,5 @@
 import 'package:file_manager/file_manager.dart';
+import 'package:path/path.dart';
 import 'package:permission_handler/permission_handler.dart';
 import 'package:image_picker/image_picker.dart';
 import 'dart:io';
@@ -48,7 +49,7 @@ Future<void> renameImage(List<FileSystemEntity> entities) async {
          int index =1;
          if(validName.containsKey(name)){
             index=validName[name];
-            String newName = element.parent.path+"/"+name+"_"+index.toString()+endString;
+            String newName = element.parent.path+"/"+name+"_(${index.toString()})"+endString;
             if(currentName!=newName){
               imageFile.rename(newName);
               validName[name]=index+1;
@@ -80,5 +81,21 @@ Future<void> duplicatesImage(List<FileSystemEntity> entities) async {
       }
     }
   }
-  print(duplicatesList);
+  bool exists = await Directory("${entities[0].parent.path}/Duplicates"). exists();
+  if  (!exists && duplicatesList.isNotEmpty) {
+    try {
+      // Create Folder
+      await FileManager.createFolder(
+          entities[0].parent.path, "Duplicates");
+    } catch (e) {} 
+  }
+  int i =Directory("${entities[0].parent.path}/Duplicates").listSync().length;
+  print(i);
+  for (var element in duplicatesList) {
+    try {
+      List basePathList=basename(element.path).split(".");
+      String newPath=element.parent.path+"/Duplicates/${basePathList[0]}_${i}.${basePathList[1]}";
+      await File(element.path).rename(newPath);
+    } catch (e) {print("moving files error "+e.toString());}
+  } 
 }

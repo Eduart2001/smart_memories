@@ -1,6 +1,7 @@
 // ignore_for_file: prefer_const_constructors
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import 'package:smart_memories/views/pages/externalStorageManager.dart';
 import 'package:smart_memories/views/pages/gallery.dart';
 import 'package:smart_memories/views/pages/internalStorageManager.dart';
 import 'package:permission_handler/permission_handler.dart';
@@ -22,8 +23,7 @@ class _HomePageState extends State<HomePage>{
           crossAxisAlignment: CrossAxisAlignment.center,
           children: [
             internalStorage(context),
-            externalStorage(context),
-          
+            //externalStorage(context),
           ],
         ),
       ),
@@ -106,7 +106,7 @@ class _HomePageState extends State<HomePage>{
                 if(status.isGranted){
                   Navigator.push(
                     context,
-                    MaterialPageRoute(builder: (context) => const InternalStorage()),
+                    MaterialPageRoute(builder: (context) => const ExternalStorage()),
                   );
                 }
 

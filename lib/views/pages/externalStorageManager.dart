@@ -3,17 +3,19 @@ import 'package:file_manager/file_manager.dart';
 import 'package:path/path.dart';
 import 'package:flutter/material.dart';
 import 'package:smart_memories/views/pages/homePage.dart';
+import 'package:path_provider/path_provider.dart';
 import 'package:smart_memories/controllers/galleryController.dart';
 
-class InternalStorage extends StatefulWidget{ 
-  const InternalStorage({super.key});
+class ExternalStorage extends StatefulWidget{ 
+  const ExternalStorage({super.key});
 
     @override
-    State<StatefulWidget> createState() =>_InternalStorage();
+    State<StatefulWidget> createState() =>_ExternalStorage();
 }
 
-class _InternalStorage extends State<InternalStorage> {
+class _ExternalStorage extends State<ExternalStorage> {
   final FileManagerController controller = FileManagerController();
+  
   List<FileSystemEntity> entities=[];
 
   @override
@@ -40,6 +42,7 @@ class _InternalStorage extends State<InternalStorage> {
                     )),
                     subtitle: subtitle(entity),
                     onTap: () async {
+                      print(await FileManager.getStorageList());
                       if (FileManager.isDirectory(entity)) {
                         // open the folder
                         controller.openDirectory(entity);
@@ -185,10 +188,8 @@ class _InternalStorage extends State<InternalStorage> {
       },
     );
   }
-
   List compatibleFormats=["jpeg","png","jpg","gif", "webp","tiff","svg"];
-  List<FileSystemEntity> filteredSnapshot(List<FileSystemEntity> snapshot)  {
-   
+  List<FileSystemEntity> filteredSnapshot(List<FileSystemEntity> snapshot) {
    for(var i= snapshot.length-1;i>=0;i--){
     String path = snapshot[i].path;
     List l = path.split(".");
@@ -198,40 +199,41 @@ class _InternalStorage extends State<InternalStorage> {
    }
    return snapshot;
   }
-  // Future<void> selectStorage(BuildContext context) async {
-  //     return showDialog(
-  //       context: context,
-  //       builder: (context) => Dialog(
-  //         child: FutureBuilder<List<Directory>>(
-  //           future: FileManager.getStorageList(),
-  //           builder: (context, snapshot) {
-  //             if (snapshot.hasData) {
-  //               final List<FileSystemEntity> storageList = snapshot.data!;
-  //               return Padding(
-  //                 padding: const EdgeInsets.all(10.0),
-  //                 child: Column(
-  //                     mainAxisSize: MainAxisSize.min,
-  //                     children: storageList
-  //                         .map((e) => ListTile(
-  //                               title: Text(
-  //                                 "${FileManager.basename(e)}",
-  //                               ),
-  //                               onTap: () {
-  //                                 controller.openDirectory(e);
-  //                                 Navigator.pop(context);
-  //                               },
-  //                             ))
-  //                         .toList()),
-  //               );
-  //             }
-  //             return Dialog(
-  //               child: CircularProgressIndicator(),
+
+ // Future<void> selectStorage(BuildContext context) async {
+  //   return showDialog(
+  //     context: context,
+  //     builder: (context) => Dialog(
+  //       child: FutureBuilder<List<Directory>>(
+  //         future: FileManager.getStorageList(),
+  //         builder: (context, snapshot) {
+  //           if (snapshot.hasData) {
+  //             final List<FileSystemEntity> storageList = snapshot.data!;
+  //             return Padding(
+  //               padding: const EdgeInsets.all(10.0),
+  //               child: Column(
+  //                   mainAxisSize: MainAxisSize.min,
+  //                   children: storageList
+  //                       .map((e) => ListTile(
+  //                             title: Text(
+  //                               "${FileManager.basename(e)}",
+  //                             ),
+  //                             onTap: () {
+  //                               controller.openDirectory(e);
+  //                               Navigator.pop(context);
+  //                             },
+  //                           ))
+  //                       .toList()),
   //             );
-  //           },
-  //         ),
+  //           }
+  //           return Dialog(
+  //             child: CircularProgressIndicator(),
+  //           );
+  //         },
   //       ),
-  //     );
-  //   }
+  //     ),
+  //   );
+  // }
 
   sort(BuildContext context){
     showDialog(
