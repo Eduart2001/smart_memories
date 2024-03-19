@@ -65,7 +65,7 @@ class _HomePageState extends State<HomePage>{
 
                 Navigator.push(
                   context,
-                  MaterialPageRoute(builder: (context) => const InternalStorage()),
+                  MaterialPageRoute(builder: (context) => const ExternalStorage()),
                 );
             }
           );
@@ -106,7 +106,7 @@ class _HomePageState extends State<HomePage>{
                 if(status.isGranted){
                   Navigator.push(
                     context,
-                    MaterialPageRoute(builder: (context) => const ExternalStorage()),
+                    MaterialPageRoute(builder: (context) => const InternalStorage()),
                   );
                 }
 

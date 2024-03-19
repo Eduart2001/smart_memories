@@ -54,10 +54,10 @@ class _ExternalStorage extends State<ExternalStorage> {
                         //await entity.rename("newPath");
 
                         // Check weather folder exists
-                         entity.exists();
+                        //  entity.exists();
 
                         // get date of file
-                         DateTime date = (await entity.stat()).modified;
+                        //  DateTime date = (await entity.stat()).modified;
                       } else {
                         // delete a file
                         //await entity.delete();
@@ -66,13 +66,13 @@ class _ExternalStorage extends State<ExternalStorage> {
                         //await entity.rename("newPath");
 
                         // Check weather file exists
-                        entity.exists();
+                        // entity.exists();
 
                         // get date of file
-                         DateTime date = (await entity.stat()).modified;
+                        //  DateTime date = (await entity.stat()).modified;
 
                         // get the size of the file
-                         int size = (await entity.stat()).size;
+                        //  int size = (await entity.stat()).size;
                       }
                     },
                   ),
@@ -188,7 +188,7 @@ class _ExternalStorage extends State<ExternalStorage> {
       },
     );
   }
-  List compatibleFormats=["jpeg","png","jpg","gif", "webp","tiff","svg"];
+  List compatibleFormats=["jpeg","png","jpg","gif", "webp","tiff","svg","JPG"];
   List<FileSystemEntity> filteredSnapshot(List<FileSystemEntity> snapshot) {
    for(var i= snapshot.length-1;i>=0;i--){
     String path = snapshot[i].path;
