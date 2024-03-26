@@ -3,27 +3,29 @@ import 'package:file_manager/file_manager.dart';
 import 'package:path/path.dart';
 import 'package:flutter/material.dart';
 import 'package:smart_memories/views/pages/homePage.dart';
-import 'package:path_provider/path_provider.dart';
 import 'package:smart_memories/controllers/galleryController.dart';
 
-class ExternalStorage extends StatefulWidget{ 
-  const ExternalStorage({super.key});
+class StorageManager extends StatefulWidget{ 
+  final String base_path;
+  const StorageManager({super.key,required this.base_path});
 
     @override
-    State<StatefulWidget> createState() =>_ExternalStorage();
+    State<StatefulWidget> createState() =>_StorageManager();
 }
 
-class _ExternalStorage extends State<ExternalStorage> {
+class _StorageManager extends State<StorageManager> {
   final FileManagerController controller = FileManagerController();
-  
   List<FileSystemEntity> entities=[];
 
   @override
   Widget build(BuildContext context) {
+    
+    controller.setCurrentPath=widget.base_path;
+
     return ControlBackButton(
       controller: controller,
       child: Scaffold(
-        appBar: appBar(context),
+        appBar: appBar(context,widget.base_path),
         body: FileManager(
           controller: controller,
           builder: (context, snapshot) {
@@ -42,22 +44,9 @@ class _ExternalStorage extends State<ExternalStorage> {
                     )),
                     subtitle: subtitle(entity),
                     onTap: () async {
-                      print(await FileManager.getStorageList());
                       if (FileManager.isDirectory(entity)) {
                         // open the folder
-                        controller.openDirectory(entity);
-                       
-                        // delete a folder
-                        //await entity.delete(recursive: true);
-
-                        // rename a folder
-                        //await entity.rename("newPath");
-
-                        // Check weather folder exists
-                        //  entity.exists();
-
-                        // get date of file
-                        //  DateTime date = (await entity.stat()).modified;
+                        controller.openDirectory(entity);              
                       } else {
                         // delete a file
                         //await entity.delete();
@@ -100,7 +89,7 @@ class _ExternalStorage extends State<ExternalStorage> {
                 onPressed: () {
                   for (var element in entities) {
                     if(FileManager.isFile(element)){
-                      renameImage(entities);
+                      renameImageController(entities);
                       setState(() {});
                       //controller.openDirectory(controller.getCurrentDirectory);
                       //Navigator.pushReplacement(context);
@@ -121,7 +110,7 @@ class _ExternalStorage extends State<ExternalStorage> {
                   if(basename(controller.getCurrentDirectory.path)!='Duplicates'){
                     for (var element in entities) {
                       if(FileManager.isFile(element)){
-                        duplicatesImage(entities);
+                        duplicatesImageController(entities);
                         setState(() {});
                         break;
                       }
@@ -138,7 +127,7 @@ class _ExternalStorage extends State<ExternalStorage> {
     );
   }
 
-  AppBar appBar(BuildContext context) {
+  AppBar appBar(BuildContext context, String base_path) {
     return AppBar(
       actions: [
 
@@ -154,12 +143,8 @@ class _ExternalStorage extends State<ExternalStorage> {
       leading: IconButton(
         icon: Icon(Icons.arrow_back),
         onPressed: () async {
-          String base_path ='/storage/emulated/0';
           if(controller.getCurrentPath==base_path){
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(builder: (context) => const HomePage()),
-                );
+                Navigator.pop(context); 
           }else{
             await controller.goToParentDirectory();
           }
@@ -188,8 +173,10 @@ class _ExternalStorage extends State<ExternalStorage> {
       },
     );
   }
+
   List compatibleFormats=["jpeg","png","jpg","gif", "webp","tiff","svg","JPG"];
-  List<FileSystemEntity> filteredSnapshot(List<FileSystemEntity> snapshot) {
+  List<FileSystemEntity> filteredSnapshot(List<FileSystemEntity> snapshot)  {
+   
    for(var i= snapshot.length-1;i>=0;i--){
     String path = snapshot[i].path;
     List l = path.split(".");
@@ -199,42 +186,6 @@ class _ExternalStorage extends State<ExternalStorage> {
    }
    return snapshot;
   }
-
- // Future<void> selectStorage(BuildContext context) async {
-  //   return showDialog(
-  //     context: context,
-  //     builder: (context) => Dialog(
-  //       child: FutureBuilder<List<Directory>>(
-  //         future: FileManager.getStorageList(),
-  //         builder: (context, snapshot) {
-  //           if (snapshot.hasData) {
-  //             final List<FileSystemEntity> storageList = snapshot.data!;
-  //             return Padding(
-  //               padding: const EdgeInsets.all(10.0),
-  //               child: Column(
-  //                   mainAxisSize: MainAxisSize.min,
-  //                   children: storageList
-  //                       .map((e) => ListTile(
-  //                             title: Text(
-  //                               "${FileManager.basename(e)}",
-  //                             ),
-  //                             onTap: () {
-  //                               controller.openDirectory(e);
-  //                               Navigator.pop(context);
-  //                             },
-  //                           ))
-  //                       .toList()),
-  //             );
-  //           }
-  //           return Dialog(
-  //             child: CircularProgressIndicator(),
-  //           );
-  //         },
-  //       ),
-  //     ),
-  //   );
-  // }
-
   sort(BuildContext context){
     showDialog(
       context: context,

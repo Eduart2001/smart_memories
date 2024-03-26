@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 import 'dart:io';
 import 'package:smart_memories/controllers/galleryController.dart';
 import 'package:smart_memories/views/pages/imageDetails.dart';
-import '../../source/imageRename.dart';
+import '../../models/imageRenameModel.dart';
 
 class Gallery extends StatefulWidget {
   const Gallery({super.key});
@@ -76,7 +76,6 @@ class _GalleryState extends State<Gallery>{
  FloatingActionButton testButton() {
   return FloatingActionButton(
      onPressed: () {
-       test_function();
      },
      tooltip: "Add a photo",
      child: Icon(Icons.add_photo_alternate_outlined),

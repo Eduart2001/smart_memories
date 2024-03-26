@@ -4,7 +4,7 @@ import 'dart:math';
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 
-import 'package:smart_memories/source/duplicates.dart';
+import 'package:smart_memories/models/duplicatesModel.dart';
 void main() {
     test('Duplicates should return "True"', () async{
       //testing on the same image 
