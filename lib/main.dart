@@ -1,8 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:smart_memories/theme/colors.dart';
 import 'package:smart_memories/theme/textTheme.dart';
-
+import 'package:get/get.dart';
 import 'package:smart_memories/views/pages/homePage.dart';
+import 'package:smart_memories/views/pages/onboarding.dart';
 
 
 void main() {
@@ -15,7 +16,7 @@ class MyApp extends StatelessWidget {
   // This widget is the root of your application.
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
+    return GetMaterialApp(
       title: 'Smart Memories',
       theme: ThemeData(
         brightness: Brightness.light,
@@ -29,10 +30,11 @@ class MyApp extends StatelessWidget {
         useMaterial3: true,
         primarySwatch: Colors.purple,
         textTheme: textTheme,
-        colorScheme: darkColorScheme,
+        colorScheme: darkColorScheme, 
       ),
       debugShowCheckedModeBanner: false,
-      home: const HomePage(),
+      //home: const HomePage(),
+      home: const OnBoardingPage(),
     );
   }
 }
