@@ -3,6 +3,7 @@ import 'package:file_manager/file_manager.dart';
 import 'package:path/path.dart';
 import 'package:flutter/material.dart';
 import 'package:smart_memories/views/pages/homePage.dart';
+import 'package:smart_memories/views/components/organiseForm.dart';
 import 'package:smart_memories/controllers/galleryController.dart';
 
 class StorageManager extends StatefulWidget{ 
@@ -106,17 +107,21 @@ class _StorageManager extends State<StorageManager> {
             ),
             Expanded(
               child: OutlinedButton(
-                onPressed: () {
-                  if(basename(controller.getCurrentDirectory.path)!='Duplicates'){
-                    for (var element in entities) {
-                      if(FileManager.isFile(element)){
-                        duplicatesImageController(entities);
-                        setState(() {});
-                        break;
-                      }
-                    }
-                  }
-                },
+                 onPressed: () async{
+                  // if(basename(controller.getCurrentDirectory.path)!='Duplicates'){
+                  //   for (var element in entities) {
+                  //     if(FileManager.isFile(element)){
+                  //       duplicatesImageController(entities);
+                  //       setState(() {});
+                  //       break;
+                  //     }
+                  //   }
+                  //}
+                  await showDialog<void>(
+                  context: context,
+                  builder: (context)=>DropDownDemo(entities:entities),
+                  );
+                 },
                 child: Text("Duplicates"),
               ),
             ),

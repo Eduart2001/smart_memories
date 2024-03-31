@@ -1,4 +1,4 @@
-import 'package:flutter/material.dart';
+ import 'package:flutter/material.dart';
 import 'package:smart_memories/theme/colors.dart';
 import 'package:smart_memories/theme/textTheme.dart';
 import 'package:get/get.dart';
