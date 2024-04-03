@@ -1,12 +1,16 @@
 import 'dart:io';
 
 import 'package:flutter/material.dart';
+import 'package:path/path.dart';
 import 'package:provider/provider.dart';
 import 'package:smart_memories/controllers/organiserController.dart';
+import 'package:smart_memories/views/pages/storageManager.dart';
 
 class DropDownDemo extends StatefulWidget {
   final List<FileSystemEntity> entities;
-  const DropDownDemo({super.key,required this.entities});
+  final String currentDirectory;
+  final BuildContext context;
+  const DropDownDemo({super.key,required this.entities,required this.currentDirectory,required this.context});
 
   @override
   State<StatefulWidget> createState() => _DropDownDemoState();
@@ -38,7 +42,6 @@ class _DropDownDemoState extends State<DropDownDemo> {
                     fP.submitFormController(widget.entities);
                     Navigator.pop(context);
                   }
-
                 }, child:const Text("Submit")),
 
               ]));
@@ -144,7 +147,7 @@ class _DropDownDemoState extends State<DropDownDemo> {
                 mainAxisAlignment: MainAxisAlignment.spaceAround,
                 children: [
                   DropdownButton<String>(
-                    padding: EdgeInsets.fromLTRB(index * 10 + 5, 0, 0, 0),
+                    padding: EdgeInsets.fromLTRB(index * 10 + 10, 0, 0, 0),
                     items: createDropDownMenuItems(controller),
                     hint: Text("Choose an option"),
                     value: currentValue,
@@ -163,7 +166,7 @@ class _DropDownDemoState extends State<DropDownDemo> {
                       },
                       child: Padding(
                         padding:
-                            EdgeInsets.fromLTRB(40 - index * 10 + 5, 0, 0, 0),
+                            EdgeInsets.fromLTRB(40 - index * 10 + 10, 0, 0, 0),
                         child: const Icon(Icons.delete),
                       )),
                 ],

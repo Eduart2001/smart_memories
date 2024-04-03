@@ -7,7 +7,7 @@ import 'package:exif/exif.dart';
 
 import 'package:smart_memories/models/imageRenameModel.dart';
 import 'package:smart_memories/models/duplicatesModel.dart';
-
+import 'package:smart_memories/models/organiserModel.dart';
 Future<void> pickImage(Function updateGallery) async {
   var status=await Permission.manageExternalStorage.request();
   final ImagePicker picker = ImagePicker();
@@ -28,12 +28,15 @@ Future<void> pickImage(Function updateGallery) async {
   }
 }
 
-Future<void> renameImageController(List<FileSystemEntity> entities) async {
-  await renameImageModel(entities);
+// Future<void> renameImageController(List<FileSystemEntity> entities) async {
+//   await renameImageModel(entities);
+// }
+
+// Future<void> duplicatesImageController(List<FileSystemEntity> entities) async {
+//   await duplicatesImageModel(entities); 
+// }
+
+
+Future<void> organiserImageController(List<FileSystemEntity> entities,List<String> organisation, bool rename, bool duplicates)async{
+  await imageOrganiserModel(entities,organisation,rename,duplicates);
 }
-
-Future<void> duplicatesImageController(List<FileSystemEntity> entities) async {
-  await duplicatesImageModel(entities); 
-}
-
-

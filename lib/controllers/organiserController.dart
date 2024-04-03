@@ -87,11 +87,9 @@ class FieldProvider extends ChangeNotifier {
   }
   submitFormController(List<FileSystemEntity> entities){
     if(_isSelectedConfirm){
-      if(_isSelectedRename){
-        renameImageController(entities);
-      }else if(_isSelectedDuplicates){
-        duplicatesImageController(entities);
-      } 
+        List <String> s = organiserModel.allSelectedOptionsValues();
+        print(s);
+        imageOrganiserModel(entities,s,_isSelectedRename,_isSelectedDuplicates);
     }
     print("Submited");
 

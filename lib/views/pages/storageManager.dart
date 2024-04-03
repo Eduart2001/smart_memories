@@ -1,5 +1,7 @@
 import 'dart:io';
+import 'dart:math';
 import 'package:file_manager/file_manager.dart';
+import 'package:get/get.dart';
 import 'package:path/path.dart';
 import 'package:flutter/material.dart';
 import 'package:smart_memories/views/pages/homePage.dart';
@@ -84,45 +86,37 @@ class _StorageManager extends State<StorageManager> {
         padding: const EdgeInsets.all(8.0), //the one you prefer
         child: Row(
           children: [
-            Expanded(
-              child: OutlinedButton(
+            // Expanded(
+            //   child: OutlinedButton(
                 
-                onPressed: () {
-                  for (var element in entities) {
-                    if(FileManager.isFile(element)){
-                      renameImageController(entities);
-                      setState(() {});
-                      //controller.openDirectory(controller.getCurrentDirectory);
-                      //Navigator.pushReplacement(context);
-                      break;
-                    }
-                  }
-                },
-                child: Text("Rename"),
-              ),
-            ),
-            SizedBox(
-              //space between button
-              width: 16,
-            ),
+            //     onPressed: () {
+            //       for (var element in entities) {
+            //         if(FileManager.isFile(element)){
+            //           //renameImageController(entities);
+            //           setState(() {});
+            //           //controller.openDirectory(controller.getCurrentDirectory);
+            //           //Navigator.pushReplacement(context);
+            //           break;
+            //         }
+            //       }
+            //     },
+            //     child: Text("Rename"),
+            //   ),
+            // ),
+            // SizedBox(
+            //   //space between button
+            //   width: 16,
+            // ),
             Expanded(
               child: OutlinedButton(
                  onPressed: () async{
-                  // if(basename(controller.getCurrentDirectory.path)!='Duplicates'){
-                  //   for (var element in entities) {
-                  //     if(FileManager.isFile(element)){
-                  //       duplicatesImageController(entities);
-                  //       setState(() {});
-                  //       break;
-                  //     }
-                  //   }
-                  //}
                   await showDialog<void>(
                   context: context,
-                  builder: (context)=>DropDownDemo(entities:entities),
+                  builder: (context)=>DropDownDemo(entities:entities,currentDirectory: controller.getCurrentPath,context:context)
+                  
                   );
                  },
-                child: Text("Duplicates"),
+                child: Text("Organiser"),
               ),
             ),
           ],
@@ -164,10 +158,12 @@ class _StorageManager extends State<StorageManager> {
         if (snapshot.hasData) {
           if (entity is File) {
             int size = snapshot.data!.size;
-
-            return Text(
+            if (size>=0) {
+                          return Text(
               "${FileManager.formatBytes(size)}",
             );
+            }
+
           }
           return Text(
             "${snapshot.data!.modified}".substring(0, 10),
