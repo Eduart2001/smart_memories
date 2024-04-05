@@ -19,7 +19,7 @@
     filtredData["Size"]="${data["Image ImageWidth"]}x ${data["Image ImageLength"]} pixels";
     filtredData["Created Date"]=data["EXIF DateTimeOriginal"].toString();
     filtredData["Location"]=await getCountry(data);
-
+    print(data);
     return filtredData;
   }
 
