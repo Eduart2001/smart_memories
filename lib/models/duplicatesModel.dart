@@ -51,9 +51,11 @@ Future<void> duplicatesImageModel(List<FileSystemEntity> entities) async {
       // Create Folder
       await FileManager.createFolder(
           entities[0].parent.path, "Duplicates");
-    } catch (e) {} 
+    } catch (e) {print(e);} 
   }
-  int i =Directory("${entities[0].parent.path}/Duplicates").listSync().length;
+    
+  int i =(duplicatesList.isNotEmpty)?Directory("${entities[0].parent.path}/Duplicates").listSync().length:0;
+  
   for (var element in duplicatesList) {
     try {
       List basePathList=basename(element.path).split(".");

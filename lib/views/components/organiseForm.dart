@@ -10,6 +10,7 @@ class DropDownDemo extends StatefulWidget {
   final List<FileSystemEntity> entities;
   final String currentDirectory;
   final BuildContext context;
+
   const DropDownDemo({super.key,required this.entities,required this.currentDirectory,required this.context});
 
   @override
@@ -18,11 +19,12 @@ class DropDownDemo extends StatefulWidget {
 
 class _DropDownDemoState extends State<DropDownDemo> {
   var filter = {};
+  
   FieldProvider fP = new FieldProvider();
 
   @override
   Widget build(BuildContext context) {
-    
+    final Color theme=(Theme.of(context).brightness==Brightness.dark)?Color.fromARGB(255, 43, 75, 44):Color.fromARGB(255, 106, 172, 108);
     return Provider<FieldProvider>(
         create: (_) => fP,
         builder: (context, child) {
@@ -33,14 +35,14 @@ class _DropDownDemoState extends State<DropDownDemo> {
                 textAlign: TextAlign.center,
               ),
               content: Column(mainAxisSize: MainAxisSize.min, children: [
-                directoryOrganiserDropBox(),
-                renameCheckbox(),
-                duplicatesCheckbox(),
+                directoryOrganiserDropBox(theme),
+                renameCheckbox(theme),
+                duplicatesCheckbox(theme),
                 confirmCheckbox(),
-                TextButton(onPressed: (){
+                TextButton(onPressed: ()async{
                   if (fP.getSelectedConfirm()) {
-                    fP.submitFormController(widget.entities);
-                    Navigator.pop(context);
+                    bool b =await fP.submitFormController(widget.entities);
+                    Navigator.of(context).pop(true);
                   }
                 }, child:const Text("Submit")),
 
@@ -59,12 +61,12 @@ class _DropDownDemoState extends State<DropDownDemo> {
     return d;
   }
 
-  Container renameCheckbox() {
+  Container renameCheckbox(Color c) {
     return Container(
       margin: EdgeInsets.all(2.0),
       decoration: BoxDecoration(
         borderRadius: BorderRadius.circular(15),
-        color: Colors.green.shade100,
+        color: c,
       ),
       child: Row(
         children: <Widget>[
@@ -82,12 +84,12 @@ class _DropDownDemoState extends State<DropDownDemo> {
     );
   }
 
-  Container duplicatesCheckbox() {
+  Container duplicatesCheckbox(Color c) {
     return Container(
       margin: EdgeInsets.all(2.0),
       decoration: BoxDecoration(
         borderRadius: BorderRadius.circular(15),
-        color: Colors.green.shade100,
+        color: c,
       ),
       child: Row(
         children: <Widget>[
@@ -128,12 +130,12 @@ class _DropDownDemoState extends State<DropDownDemo> {
     );
   }
 
-  Container directoryOrganiserDropBox() {
+  Container directoryOrganiserDropBox(Color c) {
     return Container(
       margin: EdgeInsets.all(2.0),
       decoration: BoxDecoration(
         borderRadius: BorderRadius.circular(15),
-        color: Colors.green.shade100,
+        color: c,
       ),
       child: Column(
         children: [

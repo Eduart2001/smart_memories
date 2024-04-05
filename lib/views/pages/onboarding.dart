@@ -51,7 +51,7 @@ class NextButtonWidget extends StatelessWidget {
       bottom: kBottomNavigationBarHeight-25,
       right: 10.0,
       child: ElevatedButton(
-        onPressed: ()=>OnBoardingController.instace.nextPage(),
+        onPressed: ()=>OnBoardingController.instace.nextPage(context),
         style: ElevatedButton.styleFrom(shape: const CircleBorder(),backgroundColor:theme ?Colors.white:Colors.black),
         child: const Icon(CupertinoIcons.arrow_right),
       )
@@ -138,15 +138,11 @@ class OnBoardingHelpUtils{
   // Image 
 
   static const String image1 = 'assets/onBoardingTutorial/tutorial1.gif';
-  static const String image2= 'assets/onBoardingTutorial/tutorial1.gif';
-  static const String image3 = 'assets/onBoardingTutorial/tutorial1.gif';
-  static const String image4 = 'assets/onBoardingTutorial/tutorial1.gif';
+  static const String image2= 'assets/onBoardingTutorial/button-options.png';
+  static const String image3 = 'assets/onBoardingTutorial/options.gif';
+  static const String image4 = 'assets/onBoardingTutorial/results-tutorial.gif';
 
 }
-
-
-
-
 
 
 Size pageSize(BuildContext context){

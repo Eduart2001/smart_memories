@@ -4,6 +4,7 @@ import 'package:file_manager/file_manager.dart';
 import 'package:get/get.dart';
 import 'package:path/path.dart';
 import 'package:flutter/material.dart';
+import 'package:smart_memories/views/pages/gallery.dart';
 import 'package:smart_memories/views/pages/homePage.dart';
 import 'package:smart_memories/views/components/organiseForm.dart';
 import 'package:smart_memories/controllers/galleryController.dart';
@@ -15,15 +16,17 @@ class StorageManager extends StatefulWidget{
     @override
     State<StatefulWidget> createState() =>_StorageManager();
 }
-
+String currentPath="";
 class _StorageManager extends State<StorageManager> {
   final FileManagerController controller = FileManagerController();
   List<FileSystemEntity> entities=[];
 
   @override
   Widget build(BuildContext context) {
-    
-    controller.setCurrentPath=widget.base_path;
+    if(currentPath==""){
+      currentPath=widget.base_path;
+    }
+    controller.setCurrentPath=currentPath;
 
     return ControlBackButton(
       controller: controller,
@@ -49,6 +52,7 @@ class _StorageManager extends State<StorageManager> {
                     onTap: () async {
                       if (FileManager.isDirectory(entity)) {
                         // open the folder
+                        currentPath=entity.path;
                         controller.openDirectory(entity);              
                       } else {
                         // delete a file
@@ -86,35 +90,44 @@ class _StorageManager extends State<StorageManager> {
         padding: const EdgeInsets.all(8.0), //the one you prefer
         child: Row(
           children: [
-            // Expanded(
-            //   child: OutlinedButton(
+            Expanded(
+              child: OutlinedButton(
                 
-            //     onPressed: () {
-            //       for (var element in entities) {
-            //         if(FileManager.isFile(element)){
-            //           //renameImageController(entities);
-            //           setState(() {});
-            //           //controller.openDirectory(controller.getCurrentDirectory);
-            //           //Navigator.pushReplacement(context);
-            //           break;
-            //         }
-            //       }
-            //     },
-            //     child: Text("Rename"),
-            //   ),
-            // ),
-            // SizedBox(
-            //   //space between button
-            //   width: 16,
-            // ),
+                onPressed: () {
+                  if (entities.isNotEmpty) {
+
+                      Navigator.push(
+                       context,
+                      MaterialPageRoute(builder: (context) => Gallery(controller:controller,imageFileList: entities,base_path: controller.getCurrentPath,)),
+                    );
+
+                  }
+                },
+                child: Text("Gallery"),
+              ),
+            ),
+            SizedBox(
+              //space between button
+              width: 16,
+            ),
             Expanded(
               child: OutlinedButton(
                  onPressed: () async{
-                  await showDialog<void>(
+                  bool? bol=await showDialog<bool>(
                   context: context,
                   builder: (context)=>DropDownDemo(entities:entities,currentDirectory: controller.getCurrentPath,context:context)
-                  
                   );
+                  if(bol!){
+                    if (entities.isNotEmpty) {
+                        final dir = Directory(currentPath);
+                        final List<FileSystemEntity> entities = await dir.list().toList();
+                        Navigator.push(
+                        context,
+                        MaterialPageRoute(builder: (context) => Gallery(controller:controller,imageFileList: entities,base_path: controller.getCurrentPath,)),
+                      );
+
+                    }
+                  }
                  },
                 child: Text("Organiser"),
               ),
@@ -143,6 +156,7 @@ class _StorageManager extends State<StorageManager> {
         icon: Icon(Icons.arrow_back),
         onPressed: () async {
           if(controller.getCurrentPath==base_path){
+                currentPath=controller.getCurrentPath;
                 Navigator.pop(context); 
           }else{
             await controller.goToParentDirectory();
@@ -181,7 +195,8 @@ class _StorageManager extends State<StorageManager> {
    for(var i= snapshot.length-1;i>=0;i--){
     String path = snapshot[i].path;
     List l = path.split(".");
-     if(FileManager.isFile(snapshot[i]) && !compatibleFormats.contains(l[l.length-1])){
+
+     if(FileManager.isFile(snapshot[i]) && !compatibleFormats.contains(l[l.length-1]) ||basename(snapshot[i].path)=='data'||basename(snapshot[i].path)=='obb'){
       snapshot.remove(snapshot[i]);
      }
    }

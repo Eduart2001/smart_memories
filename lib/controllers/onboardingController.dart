@@ -16,8 +16,9 @@ class OnBoardingController extends GetxController{
     currentPageIndex.value=index;
     pageController.jumpTo(index);
   }
-  void nextPage(){
+  void nextPage(BuildContext context){
     if(currentPageIndex.value==3){
+      Navigator.pop(context);
       Get.to(const HomePage());
     }else{
       currentPageIndex.value+=1;

@@ -6,53 +6,55 @@ import 'dart:io';
 import 'package:smart_memories/views/components/informationTile.dart';
 import 'package:smart_memories/controllers/imageDetailsController.dart';
 
-
 class ImageDetails extends StatefulWidget {
   final File imageFile;
   const ImageDetails({super.key, required this.imageFile});
-  
-  
-  
+
   @override
   State<StatefulWidget> createState() => _ImageDetailsState();
 }
 
-
 class _ImageDetailsState extends State<ImageDetails> {
-  List <Map<String,String>>?imageDetailsList=[];
-  void imageDetailsListUpdate(Map<String,String>details){
-    setState(() {
-      imageDetailsList!.add(details);
-    });
+  Map<String,String> imageDetailsList = {};
+  void imageDetailsListUpdate(Map<String,String> details) {
+     imageDetailsList=details; 
+     setState(() {
+       
+     });
   }
+  
   @override
   Widget build(BuildContext context) {
-    
+    imageDetailsMap(imageDetailsListUpdate,widget.imageFile);
+    print(imageDetailsList);
     return Scaffold(
       appBar: appBar(),
       body: Expanded(
         child: Column(
           children: [
-            Image.file(widget.imageFile), // Utilisez widget.imageFile directement
+            Image.file(widget.imageFile,
+                width: MediaQuery.of(context).size.width,
+                height: MediaQuery.of(context).size.height *
+                    0.6), // Utilisez widget.imageFile directement
             const Divider(),
-            ListView(
-              children: const [ 
-                //InformationTile(category: 'category', details: null),
-              ],
-              //todo: Lister toutes les propriétés de la photo dans le ImageDetailsController
-            )
+            InformationTile(category: 'Image Details', details:imageDetailsList),
           ],
         ),
       ),
     );
   }
+
   AppBar appBar() {
     return AppBar(
       title: Text('Image Details'),
       elevation: 0.0,
       centerTitle: true,
+      leading: IconButton(
+        icon: Icon(Icons.arrow_back),
+        onPressed: () {
+          Navigator.pop(context);
+        },
+      ),
     );
   }
 }
-
-
