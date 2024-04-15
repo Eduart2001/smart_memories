@@ -1,42 +1,66 @@
-import 'dart:math';
-
-import 'package:flutter/material.dart';
 import 'dart:io';
 
-import 'package:smart_memories/views/components/informationTile.dart';
-import 'package:smart_memories/controllers/imageDetailsController.dart';
+import 'package:flutter/material.dart';
+import 'package:smart_memories/models/imageDetailsGetter.dart';
 
 class ImageDetails extends StatefulWidget {
   final File imageFile;
-  const ImageDetails({super.key, required this.imageFile});
+  const ImageDetails({Key? key, required this.imageFile}) : super(key: key);
 
   @override
-  State<StatefulWidget> createState() => _ImageDetailsState();
+  _ImageDetailsState createState() => _ImageDetailsState();
 }
 
 class _ImageDetailsState extends State<ImageDetails> {
-  Map<String,String> imageDetailsList = {};
-  void imageDetailsListUpdate(Map<String,String> details) {
-     imageDetailsList=details;
-     setState(() {
-       
-     }); 
+  Map<String, String> imageDetailsList = {};
+
+  @override
+  void initState() {
+    super.initState();
+    getImageDetails();
   }
-  
+
+  Future<void> getImageDetails() async {
+    Map details = await imageExifDetailsGetter(widget.imageFile) as Map;
+    setState(() {
+      imageDetailsList = details.map((key, value) => MapEntry(key.toString(), value.toString()));
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
-    imageDetailsMap(imageDetailsListUpdate,widget.imageFile);
     return Scaffold(
-      appBar: appBar(),
+      appBar: AppBar(
+        title: Text('Image Details'),
+        elevation: 0.0,
+        centerTitle: true,
+        leading: IconButton(
+          icon: Icon(Icons.arrow_back),
+          onPressed: () {
+            Navigator.pop(context);
+          },
+        ),
+      ),
       body: Column(
-          children: [
-            Image.file(widget.imageFile,
-                width: MediaQuery.of(context).size.width,
-                height: MediaQuery.of(context).size.height *
-                    0.6), // Utilisez widget.imageFile directement
-            const Divider(),
-            InformationTile(category: 'Image Details', details:imageDetailsList),
-          ],
+        children: [
+          Image.file(
+            widget.imageFile,
+            width: MediaQuery.of(context).size.width,
+            height: MediaQuery.of(context).size.height * 0.6,
+          ),
+          const Divider(),
+          Expanded(
+            child: ListView.builder(
+              itemCount: imageDetailsList.keys.length,
+              itemBuilder: (context, index) {
+                String key = imageDetailsList.keys.elementAt(index);
+                return ListTile(
+                  title: Text('$key: ${imageDetailsList[key]}'),
+                );
+              },
+            ),
+          ),
+        ],
       ),
     );
   }
@@ -55,3 +79,6 @@ class _ImageDetailsState extends State<ImageDetails> {
     );
   }
 }
+
+
+
