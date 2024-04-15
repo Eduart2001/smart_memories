@@ -92,7 +92,7 @@ class _DropDownDemoState extends State<DropDownDemo> {
   }
 
   Container confirmCheckbox(context) {
-    final Color c = (Theme.of(context).brightness==Brightness.dark)?darkColorScheme.error:lightColorScheme.error;
+    final Color c = (Theme.of(context).brightness==Brightness.dark)?darkColorScheme.errorContainer:lightColorScheme.error;
     return buildCheckbox(c, "Confirm", fP.getSelectedConfirm, (value) => fP.isSelectedConfirm = value);
   }
 

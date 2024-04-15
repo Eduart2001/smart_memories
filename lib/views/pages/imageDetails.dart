@@ -1,66 +1,40 @@
+import 'package:flutter/material.dart';
 import 'dart:io';
 
-import 'package:flutter/material.dart';
-import 'package:smart_memories/models/imageDetailsGetter.dart';
+import 'package:smart_memories/views/components/informationTile.dart';
+import 'package:smart_memories/controllers/imageDetailsController.dart';
 
 class ImageDetails extends StatefulWidget {
   final File imageFile;
-  const ImageDetails({Key? key, required this.imageFile}) : super(key: key);
+  const ImageDetails({super.key, required this.imageFile});
 
   @override
-  _ImageDetailsState createState() => _ImageDetailsState();
+  State<StatefulWidget> createState() => _ImageDetailsState();
 }
 
 class _ImageDetailsState extends State<ImageDetails> {
-  Map<String, String> imageDetailsList = {};
+  Map<String,String> imageDetailsList = {};
+  void imageDetailsListUpdate(Map<String,String> details) {
+     imageDetailsList=details;
+     setState(() {
 
-  @override
-  void initState() {
-    super.initState();
-    getImageDetails();
-  }
-
-  Future<void> getImageDetails() async {
-    Map details = await imageExifDetailsGetter(widget.imageFile) as Map;
-    setState(() {
-      imageDetailsList = details.map((key, value) => MapEntry(key.toString(), value.toString()));
-    });
+     });
   }
 
   @override
   Widget build(BuildContext context) {
+    imageDetailsMap(imageDetailsListUpdate,widget.imageFile);
     return Scaffold(
-      appBar: AppBar(
-        title: Text('Image Details'),
-        elevation: 0.0,
-        centerTitle: true,
-        leading: IconButton(
-          icon: Icon(Icons.arrow_back),
-          onPressed: () {
-            Navigator.pop(context);
-          },
-        ),
-      ),
+      appBar: appBar(),
       body: Column(
-        children: [
-          Image.file(
-            widget.imageFile,
-            width: MediaQuery.of(context).size.width,
-            height: MediaQuery.of(context).size.height * 0.6,
-          ),
-          const Divider(),
-          Expanded(
-            child: ListView.builder(
-              itemCount: imageDetailsList.keys.length,
-              itemBuilder: (context, index) {
-                String key = imageDetailsList.keys.elementAt(index);
-                return ListTile(
-                  title: Text('$key: ${imageDetailsList[key]}'),
-                );
-              },
-            ),
-          ),
-        ],
+          children: [
+            Image.file(widget.imageFile,
+                width: MediaQuery.of(context).size.width,
+                height: MediaQuery.of(context).size.height *
+                    0.6), // Utilisez widget.imageFile directement
+            const Divider(),
+            InformationTile(category: 'Image Details', details:imageDetailsList),
+          ],
       ),
     );
   }
@@ -79,6 +53,3 @@ class _ImageDetailsState extends State<ImageDetails> {
     );
   }
 }
-
-
-
