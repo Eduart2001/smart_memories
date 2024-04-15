@@ -1,10 +1,9 @@
 import 'dart:io';
 
 import 'package:flutter/material.dart';
-import 'package:path/path.dart';
 import 'package:provider/provider.dart';
 import 'package:smart_memories/controllers/organiserController.dart';
-import 'package:smart_memories/views/pages/storageManager.dart';
+import 'package:smart_memories/theme/colors.dart';
 
 class DropDownDemo extends StatefulWidget {
   final List<FileSystemEntity> entities;
@@ -24,7 +23,7 @@ class _DropDownDemoState extends State<DropDownDemo> {
 
   @override
   Widget build(BuildContext context) {
-    final Color theme=(Theme.of(context).brightness==Brightness.dark)?Color.fromARGB(255, 43, 75, 44):Color.fromARGB(255, 106, 172, 108);
+    final Color theme=(Theme.of(context).brightness==Brightness.dark)?const Color.fromARGB(255, 43, 75, 44):const Color.fromARGB(255, 106, 172, 108);
     return Provider<FieldProvider>(
         create: (_) => fP,
         builder: (context, child) {
@@ -38,7 +37,7 @@ class _DropDownDemoState extends State<DropDownDemo> {
                 directoryOrganiserDropBox(theme),
                 renameCheckbox(theme),
                 duplicatesCheckbox(theme),
-                confirmCheckbox(),
+                confirmCheckbox(context),
                 TextButton(onPressed: ()async{
                   if (fP.getSelectedConfirm()) {
                     bool b =await fP.submitFormController(widget.entities);
@@ -61,9 +60,9 @@ class _DropDownDemoState extends State<DropDownDemo> {
     return d;
   }
 
-  Container renameCheckbox(Color c) {
+  Container buildCheckbox(Color c, String text, dynamic Function() getValue, void Function(bool) setValue) {
     return Container(
-      margin: EdgeInsets.all(2.0),
+      margin: const EdgeInsets.all(2.0),
       decoration: BoxDecoration(
         borderRadius: BorderRadius.circular(15),
         color: c,
@@ -71,68 +70,37 @@ class _DropDownDemoState extends State<DropDownDemo> {
       child: Row(
         children: <Widget>[
           Checkbox(
-            value: fP.getSelectedRename(),
+            value: getValue() as bool,
             onChanged: (bool? value) {
               setState(() {
-                fP.isSelectedRename = value!;
+                setValue(value!);
               });
             },
           ), //Checkbox
-          Text("Rename"),
+          Text(text),
         ], //<Widget>[]
       ), //Row,
     );
+  }
+
+  Container renameCheckbox(Color c) {
+    return buildCheckbox(c, "Rename", fP.getSelectedRename, (value) => fP.isSelectedRename = value);
   }
 
   Container duplicatesCheckbox(Color c) {
-    return Container(
-      margin: EdgeInsets.all(2.0),
-      decoration: BoxDecoration(
-        borderRadius: BorderRadius.circular(15),
-        color: c,
-      ),
-      child: Row(
-        children: <Widget>[
-          Checkbox(
-            value: fP.getSelectedDuplicates(),
-            onChanged: (bool? value) {
-              setState(() {
-                fP.isSelectedDuplicates = value!;
-              });
-            },
-          ), //Checkbox
-          Text("Duplicates"),
-        ], //<Widget>[]
-      ), //Row,
-    );
+    return buildCheckbox(c, "Duplicates", fP.getSelectedDuplicates, (value) => fP.isSelectedDuplicates = value);
   }
 
-  Container confirmCheckbox() {
-    return Container(
-      margin: EdgeInsets.all(2.0),
-      decoration: BoxDecoration(
-        borderRadius: BorderRadius.circular(15),
-        color: Colors.red.shade500,
-      ),
-      child: Row(
-        children: <Widget>[
-          Checkbox(
-            value: fP.getSelectedConfirm(),
-            onChanged: (bool? value) {
-              setState(() {
-                fP.isSelectedConfirm = value!;
-              });
-            },
-          ), //Checkbox
-          Text("Confirm"),
-        ], //<Widget>[]
-      ), //Row,
-    );
+  Container confirmCheckbox(context) {
+    final Color c = (Theme.of(context).brightness==Brightness.dark)?darkColorScheme.error:lightColorScheme.error;
+    return buildCheckbox(c, "Confirm", fP.getSelectedConfirm, (value) => fP.isSelectedConfirm = value);
   }
+
+
 
   Container directoryOrganiserDropBox(Color c) {
     return Container(
-      margin: EdgeInsets.all(2.0),
+      margin: const EdgeInsets.all(2.0),
       decoration: BoxDecoration(
         borderRadius: BorderRadius.circular(15),
         color: c,
@@ -151,7 +119,7 @@ class _DropDownDemoState extends State<DropDownDemo> {
                   DropdownButton<String>(
                     padding: EdgeInsets.fromLTRB(index * 10 + 10, 0, 0, 0),
                     items: createDropDownMenuItems(controller),
-                    hint: Text("Choose an option"),
+                    hint: const Text("Choose an option"),
                     value: currentValue,
                     onChanged: (newValue) {
                       fP.addToSelectedOptionsController(index, newValue!);
@@ -186,8 +154,9 @@ class _DropDownDemoState extends State<DropDownDemo> {
                         fP = new FieldProvider();
                       } else if (fP.isSelected) {
                         List l = fP.getAvailableOptionsController();
-                        if (!l.isEmpty)
+                        if (l.isNotEmpty) {
                           fP.dropBoxField = fP.getAvailableOptionsController();
+                        }
                       }
                     });
                   },
