@@ -92,7 +92,7 @@ class OnBoardSkipWidget extends StatelessWidget {
   }
 }
 
-class OnBoardingPageWidget extends StatelessWidget {
+class OnBoardingPageWidget  extends StatelessWidget {
   const OnBoardingPageWidget({
     super.key,required this.title, required this.description, required this.image
   });
@@ -186,5 +186,5 @@ class OnBoardingHelpUtils{
 
 
 Size pageSize(BuildContext context){
-  return MediaQuery.of(Get.context!).size;
+  return MediaQuery.of(context).size;
 }

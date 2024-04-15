@@ -17,20 +17,18 @@ class ImageDetails extends StatefulWidget {
 class _ImageDetailsState extends State<ImageDetails> {
   Map<String,String> imageDetailsList = {};
   void imageDetailsListUpdate(Map<String,String> details) {
-     imageDetailsList=details; 
+     imageDetailsList=details;
      setState(() {
        
-     });
+     }); 
   }
   
   @override
   Widget build(BuildContext context) {
     imageDetailsMap(imageDetailsListUpdate,widget.imageFile);
-    print(imageDetailsList);
     return Scaffold(
       appBar: appBar(),
-      body: Expanded(
-        child: Column(
+      body: Column(
           children: [
             Image.file(widget.imageFile,
                 width: MediaQuery.of(context).size.width,
@@ -39,7 +37,6 @@ class _ImageDetailsState extends State<ImageDetails> {
             const Divider(),
             InformationTile(category: 'Image Details', details:imageDetailsList),
           ],
-        ),
       ),
     );
   }

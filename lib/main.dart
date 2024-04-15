@@ -7,7 +7,7 @@ import 'package:smart_memories/views/pages/onboarding.dart';
 
 
 void main() {
-  runApp(const MyApp());
+  Future.delayed(Duration(microseconds: 1500),()=>runApp(const MyApp()));
 }
 
 class MyApp extends StatelessWidget {
@@ -34,7 +34,7 @@ class MyApp extends StatelessWidget {
       ),
       debugShowCheckedModeBanner: false,
       //home: const HomePage(),
-      home: const OnBoardingPage(),
+      home:  const OnBoardingPage(),
     );
   }
 }
