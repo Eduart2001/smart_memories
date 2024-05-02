@@ -16,17 +16,19 @@ class StorageManager extends StatefulWidget{
     @override
     State<StatefulWidget> createState() =>_StorageManager();
 }
-String currentPath="";
+
 class _StorageManager extends State<StorageManager> {
-  final FileManagerController controller = FileManagerController();
+  late FileManagerController controller;
   List<FileSystemEntity> entities=[];
 
   @override
+  void initState() {
+    controller = FileManagerController(); 
+    super.initState();
+  }
+  @override
   Widget build(BuildContext context) {
-    if(currentPath==""){
-      currentPath=widget.base_path;
-    }
-    controller.setCurrentPath=currentPath;
+    
 
     return ControlBackButton(
       controller: controller,
@@ -52,7 +54,10 @@ class _StorageManager extends State<StorageManager> {
                     onTap: () async {
                       if (FileManager.isDirectory(entity)) {
                         // open the folder
-                        currentPath=entity.path;
+                        // setState(() {
+                        //   currentPath=entity.path;
+                        // });
+                        //currentPath=entity.path;
                         controller.openDirectory(entity);              
                       } else {
                         // delete a file
@@ -117,16 +122,14 @@ class _StorageManager extends State<StorageManager> {
                   context: context,
                   builder: (context)=>DropDownDemo(entities:entities,currentDirectory: controller.getCurrentPath,context:context)
                   );
-                  if(bol!){
-                    if (entities.isNotEmpty) {
-                        final dir = Directory(currentPath);
-                        final List<FileSystemEntity> entities = await dir.list().toList();
-                        Navigator.push(
-                        context,
-                        MaterialPageRoute(builder: (context) => Gallery(controller:controller,imageFileList: entities,base_path: controller.getCurrentPath,)),
-                      );
 
-                    }
+                  if (entities.isNotEmpty) {
+                      final dir = Directory(controller.getCurrentPath);
+                      final List<FileSystemEntity> entities = await dir.list().toList();
+                      Navigator.push(
+                      context,
+                      MaterialPageRoute(builder: (context) => Gallery(controller:controller,imageFileList: entities,base_path: controller.getCurrentPath,)),
+                    );
                   }
                  },
                 child: Text("Organiser"),
@@ -148,15 +151,12 @@ class _StorageManager extends State<StorageManager> {
           icon: Icon(Icons.sort_rounded),
         ),
       ],
-      title: ValueListenableBuilder<String>(
-        valueListenable: controller.titleNotifier,
-        builder: (context, title, _) => Text(title),
-      ),
+      title: Text(base_path)
+      ,
       leading: IconButton(
         icon: Icon(Icons.arrow_back),
         onPressed: () async {
-          if(controller.getCurrentPath==base_path){
-                currentPath=controller.getCurrentPath;
+          if(await controller.isRootDirectory()){
                 Navigator.pop(context); 
           }else{
             await controller.goToParentDirectory();

@@ -88,12 +88,9 @@ class FieldProvider extends ChangeNotifier {
   submitFormController(List<FileSystemEntity> entities)async {
     if(_isSelectedConfirm){
         List <String> s = organiserModel.allSelectedOptionsValues();
-        print(s);
         await imageOrganiserModel(entities,s,_isSelectedRename,_isSelectedDuplicates);
     }
     return true;
-    print("Submited");
-
   }
 }
 
