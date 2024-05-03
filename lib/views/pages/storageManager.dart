@@ -1,43 +1,46 @@
 import 'dart:io';
-import 'dart:math';
 import 'package:file_manager/file_manager.dart';
+import 'package:flutter/foundation.dart';
 import 'package:get/get.dart';
 import 'package:path/path.dart';
 import 'package:flutter/material.dart';
 import 'package:smart_memories/views/pages/gallery.dart';
-import 'package:smart_memories/views/pages/homePage.dart';
+
 import 'package:smart_memories/views/components/organiseForm.dart';
-import 'package:smart_memories/controllers/galleryController.dart';
 
-class StorageManager extends StatefulWidget{ 
+class StorageManager extends StatefulWidget {
   final String base_path;
-  const StorageManager({super.key,required this.base_path});
+  const StorageManager({super.key, required this.base_path});
 
-    @override
-    State<StatefulWidget> createState() =>_StorageManager();
+  @override
+  State<StatefulWidget> createState() => _StorageManager();
 }
 
+
+bool showGallery = false;
 class _StorageManager extends State<StorageManager> {
   late FileManagerController controller;
-  List<FileSystemEntity> entities=[];
+  List<FileSystemEntity> entities = [];
 
   @override
   void initState() {
-    controller = FileManagerController(); 
+    controller = FileManagerController();
     super.initState();
   }
+
   @override
   Widget build(BuildContext context) {
-    
-
     return ControlBackButton(
       controller: controller,
       child: Scaffold(
-        appBar: appBar(context,widget.base_path),
+        appBar: appBar(context, widget.base_path),
         body: FileManager(
           controller: controller,
           builder: (context, snapshot) {
             entities = filteredSnapshot(snapshot);
+            if(entities.isEmpty){
+                return Center(child: Text("No images found\nFolder contains only unsupported files" , textAlign: TextAlign.center,));
+            }
             return ListView.builder(
               padding: EdgeInsets.symmetric(horizontal: 2, vertical: 0),
               itemCount: entities.length,
@@ -45,7 +48,9 @@ class _StorageManager extends State<StorageManager> {
                 FileSystemEntity entity = entities[index];
                 return Card(
                   child: ListTile(
-                    leading: FileManager.isFile(entity)?Icon(Icons.feed_outlined): Icon(Icons.folder),
+                    leading: FileManager.isFile(entity)
+                        ? Icon(Icons.feed_outlined)
+                        : Icon(Icons.folder),
                     title: Text(FileManager.basename(
                       entity,
                       showFileExtension: true,
@@ -58,7 +63,7 @@ class _StorageManager extends State<StorageManager> {
                         //   currentPath=entity.path;
                         // });
                         //currentPath=entity.path;
-                        controller.openDirectory(entity);              
+                        controller.openDirectory(entity);
                       } else {
                         // delete a file
                         //await entity.delete();
@@ -77,12 +82,12 @@ class _StorageManager extends State<StorageManager> {
                       }
                     },
                   ),
-                ); 
+                );
               },
             );
           },
         ),
-        
+
         // floatingActionButton: FloatingActionButton.extended(
         //   onPressed: () async {
         //   var status=await Permission.manageExternalStorage.request();
@@ -92,52 +97,71 @@ class _StorageManager extends State<StorageManager> {
         //   label: Text("Request File Access Permission"),
         // ),
         bottomNavigationBar: Padding(
-        padding: const EdgeInsets.all(8.0), //the one you prefer
-        child: Row(
-          children: [
-            Expanded(
-              child: OutlinedButton(
-                
-                onPressed: () {
-                  if (entities.isNotEmpty) {
-
+          padding: const EdgeInsets.all(8.0), //the one you prefer
+          child: Row(
+            children: [
+              Expanded(
+                child: OutlinedButton(
+                  onPressed: () {
+                    if (entities.isNotEmpty) {
                       Navigator.push(
-                       context,
-                      MaterialPageRoute(builder: (context) => Gallery(controller:controller,imageFileList: entities,base_path: controller.getCurrentPath,)),
-                    );
-
-                  }
-                },
-                child: Text("Gallery"),
+                        context,
+                        MaterialPageRoute(
+                            builder: (context) => Gallery(
+                                  controller: controller,
+                                  imageFileList: entities,
+                                  base_path: controller.getCurrentPath,
+                                )),
+                      );
+                    }
+                  },
+                  child: Text("Gallery"),
+                ),
               ),
-            ),
-            SizedBox(
-              //space between button
-              width: 16,
-            ),
-            Expanded(
-              child: OutlinedButton(
-                 onPressed: () async{
-                  bool? bol=await showDialog<bool>(
-                  context: context,
-                  builder: (context)=>DropDownDemo(entities:entities,currentDirectory: controller.getCurrentPath,context:context)
-                  );
+              SizedBox(
+                //space between button
+                width: 16,
+              ),
+              Expanded(
+                child: OutlinedButton(
+                  onPressed: () async { 
+                  
+                  if (this.entities.isNotEmpty) {
 
-                  if (entities.isNotEmpty) {
-                      final dir = Directory(controller.getCurrentPath);
-                      final List<FileSystemEntity> entities = await dir.list().toList();
+                    bool? result =await showDialog<bool>(
+                      barrierDismissible: true,
+                      context: context,
+                      builder: (context) => DropDownDemo(
+                      entities: entities,
+                      currentDirectory: controller.getCurrentPath,
+                      context: context,
+                      ),
+                    );
+                   if (showGallery) {
+                     final dir = Directory(controller.getCurrentPath);
+                      final List<FileSystemEntity> entities =
+                          await dir.list().toList();
+                      showGallery=false;
                       Navigator.push(
-                      context,
-                      MaterialPageRoute(builder: (context) => Gallery(controller:controller,imageFileList: entities,base_path: controller.getCurrentPath,)),
-                    );
-                  }
-                 },
-                child: Text("Organiser"),
+                        context,
+                        MaterialPageRoute(
+                            builder: (context) => Gallery(
+                                  controller: controller,
+                                  imageFileList: filteredSnapshot(entities),
+                                  base_path: controller.getCurrentPath,
+                                )),
+                      );
+                     
+                   }
+                  
+                    }
+                  },
+                  child: Text("Organiser"),
+                ),
               ),
-            ),
-          ],
+            ],
+          ),
         ),
-      ),
       ),
     );
   }
@@ -145,26 +169,25 @@ class _StorageManager extends State<StorageManager> {
   AppBar appBar(BuildContext context, String base_path) {
     return AppBar(
       actions: [
-
         IconButton(
           onPressed: () => sort(context),
           icon: Icon(Icons.sort_rounded),
         ),
       ],
-      title: Text(base_path)
-      ,
+      title: Text(base_path),
       leading: IconButton(
         icon: Icon(Icons.arrow_back),
         onPressed: () async {
-          if(await controller.isRootDirectory()){
-                Navigator.pop(context); 
-          }else{
+          if (await controller.isRootDirectory()) {
+            Navigator.pop(context);
+          } else {
             await controller.goToParentDirectory();
           }
         },
       ),
     );
   }
+
   Widget subtitle(FileSystemEntity entity) {
     return FutureBuilder<FileStat>(
       future: entity.stat(),
@@ -172,12 +195,11 @@ class _StorageManager extends State<StorageManager> {
         if (snapshot.hasData) {
           if (entity is File) {
             int size = snapshot.data!.size;
-            if (size>=0) {
-                          return Text(
-              "${FileManager.formatBytes(size)}",
-            );
+            if (size >= 0) {
+              return Text(
+                "${FileManager.formatBytes(size)}",
+              );
             }
-
           }
           return Text(
             "${snapshot.data!.modified}".substring(0, 10),
@@ -189,20 +211,50 @@ class _StorageManager extends State<StorageManager> {
     );
   }
 
-  List compatibleFormats=["jpeg","png","jpg","gif", "webp","tiff","svg","JPG"];
-  List<FileSystemEntity> filteredSnapshot(List<FileSystemEntity> snapshot)  {
-   
-   for(var i= snapshot.length-1;i>=0;i--){
-    String path = snapshot[i].path;
-    List l = path.split(".");
+List compatibleFormats = [
+    "jpeg",
+    "png",
+    "jpg",
+    "gif",
+    "webp",
+    "tiff",
+    "svg",
+    "JPG"
+  ];
+List<FileSystemEntity> filteredSnapshot(List<FileSystemEntity> snapshot) {
+  /*
+  Filters a list of FileSystemEntity objects.
 
-     if(FileManager.isFile(snapshot[i]) && !compatibleFormats.contains(l[l.length-1]) ||basename(snapshot[i].path)=='data'||basename(snapshot[i].path)=='obb'){
+  This function iterates over a list of FileSystemEntity objects in reverse order,
+  checks if each entity is a file and if its format is compatible, and removes it from the list if not.
+  It also removes any entities with the basename 'data' or 'obb', and any empty directories.
+
+  The function uses the `FileManager` class to check if an entity is a file or a directory.
+  It uses the `basename` function to get the basename of an entity's path.
+  It uses the `listSync` method to check if a directory is empty.
+
+  The function prints the snapshot list at each iteration.
+
+  @param snapshot A list of FileSystemEntity objects to filter.
+  @return The filtered list of FileSystemEntity objects.
+  */
+  for (var i = snapshot.length - 1; i >= 0; i--) {
+    String path = snapshot[i].path;
+    List<String> parts = path.split(".");
+    String extension = parts.last.toLowerCase();
+    if (FileManager.isFile(snapshot[i]) &&
+        !compatibleFormats.contains(extension) ||
+        basename(snapshot[i].path) == 'data' ||
+        basename(snapshot[i].path) == '.thumbnails' ||
+        basename(snapshot[i].path) == 'obb' ||
+        (FileManager.isDirectory(snapshot[i]) &&
+            (snapshot[i] as Directory).listSync().isEmpty)) {
       snapshot.remove(snapshot[i]);
-     }
-   }
-   return snapshot;
+    }
   }
-  sort(BuildContext context){
+  return snapshot;
+}
+  sort(BuildContext context) {
     showDialog(
       context: context,
       builder: (context) => Dialog(

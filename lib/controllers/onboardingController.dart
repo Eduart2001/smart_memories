@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import 'package:smart_memories/views/pages/homePage.dart';
 
 class OnBoardingController extends GetxController{
@@ -16,8 +17,10 @@ class OnBoardingController extends GetxController{
     currentPageIndex.value=index;
     pageController.jumpTo(index);
   }
-  void nextPage(BuildContext context){
+  void nextPage(BuildContext context)async{
     if(currentPageIndex.value==4){
+      SharedPreferences prefs = await SharedPreferences.getInstance();
+      await prefs.setBool('showOnboarding', false);
       Navigator.pop(context);
       Get.to(const HomePage());
     }else{

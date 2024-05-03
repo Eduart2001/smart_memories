@@ -9,35 +9,6 @@ import 'package:flutter/foundation.dart';
 import 'package:image/image.dart';
 import 'package:crypto/crypto.dart';
 import 'package:path/path.dart';
-Future<bool> duplicates(File f1, File f2)async{
-  int f1_Bytes = await f1.length();
-  int f2_Bytes = await f2.length();
-  if(f1_Bytes!=f2_Bytes){
-    print("They dont have same size: image1(${f1_Bytes} bytes), image2(${f2_Bytes} bytes)");
-    return false;
-  }
-  Image? i1=decodeImage(f1.readAsBytesSync());
-  Image? i2=decodeImage(f2.readAsBytesSync());
-  if(i1!.width !=i2!.width && i1.height !=i2.height){
-    print("They dont have same dimensions: image1(${i1!.width}x${i1!.height}), image2(${i2!.width}x${i2!.height})");
-    return false;
-  }
-
-  int width=i1.width;
-  int height=i1.height;
-
-  int sz = (width * height > 400000) ? 400000 :width * height;
-
-  for (var i = 0; i < sz; i++) {
-    int x = Random().nextInt(width);
-    int y = Random().nextInt(height);
-    if(i1.getPixel(x, y)!=i2.getPixel(x, y)){
-      print("They dont have same pixel value for x=${x} and y=${y}: image1(${i1.getPixel(x, y)}), image2(${i2.getPixel(x, y)})");
-      return false;
-    }
-  }
-  return true;
-}
 
 generateImageHash(String fileBytes) {
   /*
@@ -81,7 +52,6 @@ Future<void> duplicatesImageModelHashMap(List<FileSystemEntity> entities) async 
   await moveToDuplicates(entities, duplicatesList); 
 
 }
-
 Future<void> moveToDuplicates(List<FileSystemEntity> entities, List<FileSystemEntity> duplicatesList) async {
   /*
     Moves duplicate files from the given list of entities to a "Duplicates" folder
@@ -113,9 +83,10 @@ Future<void> moveToDuplicates(List<FileSystemEntity> entities, List<FileSystemEn
   } 
 }
 Future<void> duplicatesImageModel(List<FileSystemEntity> entities) async {
-    print(entities.length);
-    final Stopwatch stopwatch = Stopwatch()..start();
-    await compute(duplicatesImageModelHashMap,entities);
-    stopwatch.stop();
-    print('Execution time: ${stopwatch.elapsed.inMilliseconds} Milliseconds');
+ /*
+  Runs the duplicates image model on the given list of [entities].
+  This function uses the [compute] function to run the [duplicatesImageModelHashMap] function in a separate isolate.
+  Returns a [Future] that completes when the computation is done.
+ */
+  await compute(duplicatesImageModelHashMap, entities);
 }

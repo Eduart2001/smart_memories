@@ -6,6 +6,7 @@ import 'package:provider/provider.dart';
 import 'package:smart_memories/controllers/organiserController.dart';
 import 'package:smart_memories/theme/colors.dart';
 import 'package:smart_memories/views/pages/splashScreen.dart';
+import 'package:smart_memories/views/pages/storageManager.dart';
 
 class DropDownDemo extends StatefulWidget {
   final List<FileSystemEntity> entities;
@@ -53,7 +54,8 @@ class _DropDownDemoState extends State<DropDownDemo> {
                 TextButton(
                     onPressed: () async {
                       if (fP.getSelectedConfirm()) {
-                        confirmDialog(context, widget.entities);
+                        await confirmDialog(context, widget.entities);
+                        showGallery=true;
                       }
                     },
                     child: const Text("Submit")),
@@ -61,8 +63,7 @@ class _DropDownDemoState extends State<DropDownDemo> {
         });
   }
 
-  void confirmDialog(BuildContext context, List<FileSystemEntity> entities) {
-    showDialog(
+  Future <void> confirmDialog(BuildContext context, List<FileSystemEntity> entities) async => showDialog(
       context: context,
       builder: (BuildContext context) {
         return AlertDialog(
@@ -112,7 +113,6 @@ class _DropDownDemoState extends State<DropDownDemo> {
         );
       }
     });
-  }
 
   List<DropdownMenuItem<String>>? createDropDownMenuItems(List l) {
     List<DropdownMenuItem<String>> d = [];

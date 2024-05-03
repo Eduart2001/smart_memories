@@ -9,10 +9,10 @@ import 'package:url_launcher/url_launcher.dart';
 class OnBoardingPage extends StatelessWidget{
   const OnBoardingPage({super.key});
 
+  
   @override
   Widget build(BuildContext context){
     final controller = Get.put(OnBoardingController());
-
     return  Scaffold(
       body: Stack(
         children: [
