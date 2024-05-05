@@ -1,6 +1,9 @@
 // ignore_for_file: prefer_const_constructors
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import 'package:get/get.dart';
+import 'package:get/get_core/src/get_main.dart';
+import 'package:smart_memories/views/pages/onboarding.dart';
 import 'package:smart_memories/views/pages/storageManager.dart';
 import 'package:permission_handler/permission_handler.dart';
 import 'package:file_manager/file_manager.dart';
@@ -17,7 +20,8 @@ class _HomePageState extends State<HomePage> {
     return Scaffold(
       appBar: appBar(context),
       body: Center(
-        child: Column(
+        child: 
+        Column(
           mainAxisAlignment: MainAxisAlignment.center,
           crossAxisAlignment: CrossAxisAlignment.center,
           children: [
@@ -26,6 +30,47 @@ class _HomePageState extends State<HomePage> {
           ],
         ),
       ),
+      floatingActionButton: FloatingActionButton(  
+        child: Icon(Icons.question_mark_rounded),  
+        mini: true,
+        shape: CircleBorder(),
+        backgroundColor: Colors.green,  
+        foregroundColor: Colors.white,  
+        onPressed: () => {
+          showDialog(
+            context: context,
+            builder: (BuildContext context) {
+              return AlertDialog(
+                title: Text("About Smart Memories"),
+                content: Text("Smart Memories is a mobile application that helps you manage your photos. It allows you to view and organize your media files.\n\n\nIf you like to go again throught the tutorial press 'Yes' else press 'No' to continue."),
+                actions: [
+              TextButton(
+                onPressed: () {
+                  Navigator.of(context).pop(true);
+                },
+                child: Text("Yes"),
+              ),
+              TextButton(
+                onPressed: () {
+                  Navigator.of(context).pop(false);
+                },
+                child: Text("No"),
+              ),
+            ],
+              );
+            }
+          ).then((value) => {
+            if(value!=null && value == true ){
+              Navigator.push(
+                context,
+                MaterialPageRoute(
+                  builder: (context) => OnBoardingPage(),
+                ),
+              )
+            }
+          })
+        },  
+      ),  
     );
   }
 

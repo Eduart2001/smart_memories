@@ -42,6 +42,7 @@ class OnBoardingController extends GetxController {
     if (currentPageIndex.value == 4) {
       SharedPreferences prefs = await SharedPreferences.getInstance();
       await prefs.setBool('showOnboarding', false);
+      updatePageIndicator(0);
       Navigator.pop(context);
       Get.to(const HomePage());
     } else {

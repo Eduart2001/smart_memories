@@ -2,6 +2,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:open_file/open_file.dart';
 import 'package:path/path.dart';
+import 'package:provider/provider.dart';
 import 'package:smart_memories/controllers/onboardingController.dart';
 import 'package:smooth_page_indicator/smooth_page_indicator.dart';
 import 'package:get/get.dart';
@@ -9,7 +10,7 @@ import 'package:url_launcher/url_launcher.dart';
 class OnBoardingPage extends StatelessWidget{
   const OnBoardingPage({super.key});
 
-  
+
   @override
   Widget build(BuildContext context){
     final controller = Get.put(OnBoardingController());
