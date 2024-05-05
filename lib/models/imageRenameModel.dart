@@ -7,6 +7,13 @@ import "package:smart_memories/models/duplicatesModel.dart";
 import 'package:geocoding/geocoding.dart';
 
 Future<void> renameImageModel(List<FileSystemEntity> entities) async {
+  /*
+      Renames the images in the list of entities based on their EXIF details.
+  
+      The [entities] parameter is a list of FileSystemEntity objects representing the images.
+  
+      Returns a [Future] that completes with the renamed images.
+    */
   Map validName = {};
   for (var element in entities) {
     if (FileManager.isFile(element)) {
@@ -35,7 +42,6 @@ Future<void> renameImageModel(List<FileSystemEntity> entities) async {
           }
         } else {
           String newName = element.parent.path + "/" + name + endString;
-          print(currentName == newName);
           if (currentName != newName) {
             imageFile.rename(newName);
             validName[name] = index;
@@ -46,4 +52,3 @@ Future<void> renameImageModel(List<FileSystemEntity> entities) async {
     }
   }
 }
-

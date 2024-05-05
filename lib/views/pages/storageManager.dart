@@ -7,6 +7,7 @@ import 'package:flutter/material.dart';
 import 'package:smart_memories/views/pages/gallery.dart';
 
 import 'package:smart_memories/views/components/organiseForm.dart';
+import 'package:smart_memories/views/pages/imageDetails.dart';
 
 class StorageManager extends StatefulWidget {
   final String base_path;
@@ -58,27 +59,17 @@ class _StorageManager extends State<StorageManager> {
                     subtitle: subtitle(entity),
                     onTap: () async {
                       if (FileManager.isDirectory(entity)) {
-                        // open the folder
-                        // setState(() {
-                        //   currentPath=entity.path;
-                        // });
-                        //currentPath=entity.path;
+                     
                         controller.openDirectory(entity);
                       } else {
-                        // delete a file
-                        //await entity.delete();
-
-                        // rename a file
-                        //await entity.rename("newPath");
-
-                        // Check weather file exists
-                        // entity.exists();
-
-                        // get date of file
-                        //  DateTime date = (await entity.stat()).modified;
-
-                        // get the size of the file
-                        //  int size = (await entity.stat()).size;
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                            builder: (context) => ImageDetails( 
+                              imageFile: File(entity.path),
+                            ),
+                          ),
+                        );
                       }
                     },
                   ),
@@ -87,15 +78,6 @@ class _StorageManager extends State<StorageManager> {
             );
           },
         ),
-
-        // floatingActionButton: FloatingActionButton.extended(
-        //   onPressed: () async {
-        //   var status=await Permission.manageExternalStorage.request();
-        //   print(status);
-        //     //await FileManager.requestFilesAccessPermission();
-        //   },
-        //   label: Text("Request File Access Permission"),
-        // ),
         bottomNavigationBar: Padding(
           padding: const EdgeInsets.all(8.0), //the one you prefer
           child: Row(

@@ -7,28 +7,46 @@ import "package:smart_memories/models/duplicatesModel.dart";
 import 'package:geocoding/geocoding.dart';
 
 class OrganiserModel {
+  /* 
+    Model class for the Organiser page.
+  */
   final List organisePossibilities = ["Year", "Month", "Day", "Location"];
   Map<int, String> selectedOptions = {};
 
   List getAvailableOptions() {
+    /* 
+      Returns the list of available options for organising images.
+    */
     return organisePossibilities
         .where((element) => !selectedOptions.values.contains(element))
         .toList();
   }
 
   void addToSelectedOptions(int key, String value) {
+    /* 
+      Adds the selected option to the list of selected options.
+    */
     selectedOptions[key] = (value);
   }
 
   void removeToSelectedOptions(int value) {
+    /* 
+      Removes the selected option from the list of selected options.
+    */
     selectedOptions.remove(value);
   }
 
   allSelectedOptions() {
+    /* 
+      Returns the list of selected options.
+    */
     return selectedOptions;
   }
 
   allSelectedOptionsValues() {
+    /* 
+      Returns the values of the selected options.
+    */
     List<String> l = [];
     for (var element in selectedOptions.keys) {
       l.add(selectedOptions[element]!);
@@ -39,10 +57,21 @@ class OrganiserModel {
 
 Future<void> imageOrganiserModel(List<FileSystemEntity> entities,
     List<String> organisation, bool rename, bool duplicates) async {
+  /* 
+      Organises the images in the list of entities based on the selected options.
+  
+      The [entities] parameter is a list of FileSystemEntity objects representing the images.
+      The [organisation] parameter is a list of strings representing the selected options.
+      The [rename] parameter is a boolean value indicating whether to rename the images.
+      The [duplicates] parameter is a boolean value indicating whether to check for duplicates.
+  
+      Returns a [Future] that completes with the organised images.
+    */
   Map validName = {};
-
+  bool mainDirectory = true;
   List<String> duplicatesName = [];
-  if (organisation.isNotEmpty) {
+  if (organisation.isNotEmpty || rename) {
+    mainDirectory = false;
     for (var element in entities) {
       if (FileManager.isFile(element)) {
         File imageFile = File(element.path);
@@ -106,15 +135,28 @@ Future<void> imageOrganiserModel(List<FileSystemEntity> entities,
       }
     }
   }
-  for (String element in duplicatesName) {
-    final dir = Directory(element);
-    final List<FileSystemEntity> entities = await dir.list().toList();
+
+  if (mainDirectory) {
     await duplicatesImageModel(entities);
+  } else {
+    for (String element in duplicatesName) {
+      final dir = Directory(element);
+      final List<FileSystemEntity> entities = await dir.list().toList();
+      await duplicatesImageModel(entities);
+    }
   }
 }
 
 Future<String> newFolderName(
     List<String> organisation, Map<String, IfdTag> data) async {
+  /* 
+      Generates the name of the new folder based on the selected options and the image details.
+  
+      The [organisation] parameter is a list of strings representing the selected options.
+      The [data] parameter is a map containing the EXIF details of the image.
+  
+      Returns a [Future] that completes with the name of the new folder.
+    */
   String name = "/";
   for (var element in organisation) {
     if (element == "Year") {
@@ -144,16 +186,13 @@ Future<String> newFolderName(
                     longitudeGPSList[2].toDouble() / 3600))
             .toDouble();
 
-        print(latitude);
-        print(longitude);
         Placemark placeMark =
             await placemarkFromCoordinates(latitude, longitude)
                 .then((value) => value[0]);
         String country = placeMark.country!;
-        print(country);
         name += "${country}/";
       } catch (e) {
-        print("test ${e}");
+        print(e);
       }
     }
   }

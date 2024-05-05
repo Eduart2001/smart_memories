@@ -1,4 +1,3 @@
-
 import 'package:path/path.dart';
 import 'package:permission_handler/permission_handler.dart';
 import 'package:image_picker/image_picker.dart';
@@ -26,7 +25,8 @@ Future<void> pickImage(Function updateGallery) async {
   }
 }
 
-Future<void> organiserImageController(List<FileSystemEntity> entities, List<String> organisation, bool rename, bool duplicates) async {
+Future<void> organiserImageController(List<FileSystemEntity> entities,
+    List<String> organisation, bool rename, bool duplicates) async {
   /*
   A function that controls the organization of images.
 
@@ -38,14 +38,21 @@ Future<void> organiserImageController(List<FileSystemEntity> entities, List<Stri
   The function calls the [imageOrganiserModel] function to perform the actual organization of images.
   
   */
-  List <FileSystemEntity> snapshot = filteredSnapshot(entities);
+  List<FileSystemEntity> snapshot = filteredSnapshot(entities);
 
   await imageOrganiserModel(snapshot, organisation, rename, duplicates);
 }
 
-
-
-List compatibleFormats=["jpeg","png","jpg","gif", "webp","tiff","svg","JPG"];
+List compatibleFormats = [
+  "jpeg",
+  "png",
+  "jpg",
+  "gif",
+  "webp",
+  "tiff",
+  "svg",
+  "JPG"
+];
 List<FileSystemEntity> filteredSnapshot(List<FileSystemEntity> snapshot) {
   /*
   Filters a list of FileSystemEntity objects.
@@ -68,7 +75,7 @@ List<FileSystemEntity> filteredSnapshot(List<FileSystemEntity> snapshot) {
     List<String> parts = path.split(".");
     String extension = parts.last.toLowerCase();
     if (FileManager.isFile(snapshot[i]) &&
-        !compatibleFormats.contains(extension) ||
+            !compatibleFormats.contains(extension) ||
         basename(snapshot[i].path) == 'data' ||
         basename(snapshot[i].path) == '.thumbnails' ||
         basename(snapshot[i].path) == 'obb' ||

@@ -41,19 +41,16 @@ class _SplashScreenState extends State<SplashScreen> {
           child: Column(
         children: [
           Image(
-            image: AssetImage('assets/icons/SMLogo.png'),
-            width:  MediaQuery.of(context).size.width,
-            height: MediaQuery.of(context).size.height *
-                    0.6),
-          Text("\n\n"
-          ),
+              image: AssetImage('assets/icons/SMLogo.png'),
+              width: MediaQuery.of(context).size.width,
+              height: MediaQuery.of(context).size.height * 0.6),
+          Text("\n\n"),
           Text(
             "This operation may take some time since, we are computing : ${widget.entities.where((entity) => entity is File).toList().length} images",
             textAlign: TextAlign.center,
           ),
           const Divider(),
-          Text("\n\n"
-          ),
+          Text("\n\n"),
           Text(
             jokes[Random().nextInt(jokes.length)],
             textAlign: TextAlign.center,

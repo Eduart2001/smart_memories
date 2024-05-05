@@ -9,6 +9,9 @@ import 'package:smart_memories/views/pages/splashScreen.dart';
 import 'package:smart_memories/views/pages/storageManager.dart';
 
 class DropDownDemo extends StatefulWidget {
+  /* 
+    A custom widget for the dropdown menu in the Organiser page.
+  */
   final List<FileSystemEntity> entities;
   final String currentDirectory;
   final BuildContext context;
@@ -24,12 +27,18 @@ class DropDownDemo extends StatefulWidget {
 }
 
 class _DropDownDemoState extends State<DropDownDemo> {
+  /* 
+    State class for the DropDownDemo widget.
+  */
   var filter = {};
 
   FieldProvider fP = new FieldProvider();
 
   @override
   Widget build(BuildContext context) {
+    /* 
+      Builds the DropDownDemo widget.
+    */
     final Color theme = (Theme.of(context).brightness == Brightness.dark)
         ? const Color.fromARGB(255, 43, 75, 44)
         : const Color.fromARGB(255, 106, 172, 108);
@@ -55,7 +64,7 @@ class _DropDownDemoState extends State<DropDownDemo> {
                     onPressed: () async {
                       if (fP.getSelectedConfirm()) {
                         await confirmDialog(context, widget.entities);
-                        showGallery=true;
+                        showGallery = true;
                       }
                     },
                     child: const Text("Submit")),
@@ -63,58 +72,74 @@ class _DropDownDemoState extends State<DropDownDemo> {
         });
   }
 
-  Future <void> confirmDialog(BuildContext context, List<FileSystemEntity> entities) async => showDialog(
-      context: context,
-      builder: (BuildContext context) {
-        return AlertDialog(
-          title: Text("Confirm"),
-          content: Text("Are you sure you want to proceed?"),
-          actions: [
-            TextButton(
-              onPressed: () {
-                Navigator.of(context).pop(true);
-              },
-              child: Text("Yes"),
-            ),
-            TextButton(
-              onPressed: () {
-                Navigator.of(context).pop(false);
-              },
-              child: Text("No"),
-            ),
-          ],
-        );
-      },
-    ).then((value) async {
-      if (value != null && value) {
-        showDialog(
+  /*
+    Displays a confirmation dialog with a title and a message.
+    
+    This function takes in a [BuildContext] and a list of [FileSystemEntity] objects.
+    It shows an [AlertDialog] with a title "Confirm" and a message "Are you sure you want to proceed?".
+    The dialog has two buttons: "Yes" and "No".
+    If the user taps on "Yes", the dialog is dismissed and a [SplashScreen] is shown.
+    If the user taps on "No" or cancels the dialog, an [AlertDialog] with a title "Alert" and a message "You chose to cancel." is shown.
+
+   */
+  Future<void> confirmDialog(
+          BuildContext context, List<FileSystemEntity> entities) async =>
+      showDialog(
+        context: context,
+        builder: (BuildContext context) {
+          return AlertDialog(
+            title: Text("Confirm"),
+            content: Text("Are you sure you want to proceed?"),
+            actions: [
+              TextButton(
+                onPressed: () {
+                  Navigator.of(context).pop(true);
+                },
+                child: Text("Yes"),
+              ),
+              TextButton(
+                onPressed: () {
+                  Navigator.of(context).pop(false);
+                },
+                child: Text("No"),
+              ),
+            ],
+          );
+        },
+      ).then((value) async {
+        if (value != null && value) {
+          showDialog(
             context: context,
             builder: (BuildContext context) {
               return SplashScreen(fP: fP, entities: entities);
-            }).then((_) => Navigator.of(context).pop());
-      } else {
-        // User canceled, add your code to handle cancellation here
-        showDialog(
-          context: context,
-          builder: (BuildContext context) {
-            return AlertDialog(
-              title: Text("Alert"),
-              content: Text("You chose to cancel."),
-              actions: [
-                TextButton(
-                  onPressed: () {
-                    Navigator.of(context).pop();
-                  },
-                  child: Text("OK"),
-                ),
-              ],
-            );
-          },
-        );
-      }
-    });
+            },
+          ).then((_) => Navigator.of(context).pop());
+        } else {
+          // User canceled, add your code to handle cancellation here
+          showDialog(
+            context: context,
+            builder: (BuildContext context) {
+              return AlertDialog(
+                title: Text("Alert"),
+                content: Text("You chose to cancel."),
+                actions: [
+                  TextButton(
+                    onPressed: () {
+                      Navigator.of(context).pop();
+                    },
+                    child: Text("OK"),
+                  ),
+                ],
+              );
+            },
+          );
+        }
+      });
 
   List<DropdownMenuItem<String>>? createDropDownMenuItems(List l) {
+    /* 
+      Creates a list of dropdown menu items from the given list.
+    */
     List<DropdownMenuItem<String>> d = [];
     for (var element in l) {
       d.add(DropdownMenuItem<String>(
@@ -127,6 +152,9 @@ class _DropDownDemoState extends State<DropDownDemo> {
 
   Container buildCheckbox(Color c, String text, dynamic Function() getValue,
       void Function(bool) setValue, String message) {
+    /* 
+      Builds a checkbox with the given color, text, value, and message.
+    */
     return Container(
       margin: const EdgeInsets.all(2.0),
       decoration: BoxDecoration(
@@ -156,6 +184,9 @@ class _DropDownDemoState extends State<DropDownDemo> {
   }
 
   Container renameCheckbox(Color c) {
+    /* 
+      Builds a checkbox for renaming images.
+    */
     return buildCheckbox(
         c,
         "Rename By Taken Date",
@@ -165,6 +196,9 @@ class _DropDownDemoState extends State<DropDownDemo> {
   }
 
   Container duplicatesCheckbox(Color c) {
+    /* 
+      Builds a checkbox for isolating duplicate images.
+    */
     return buildCheckbox(
         c,
         "Isolate Duplicates",
@@ -186,6 +220,9 @@ class _DropDownDemoState extends State<DropDownDemo> {
   }
 
   Container directoryOrganiserDropBox(Color c) {
+    /* 
+      Builds a dropbox for organising images by directory.
+    */
     return Container(
       margin: const EdgeInsets.all(2.0),
       decoration: BoxDecoration(
@@ -228,8 +265,6 @@ class _DropDownDemoState extends State<DropDownDemo> {
               ),
             );
           }),
-
-          ///Add more button
           Align(
               alignment: Alignment.center,
               child: TextButton(
@@ -246,7 +281,6 @@ class _DropDownDemoState extends State<DropDownDemo> {
                     });
                   },
                   child: const Icon(Icons.add_circle_outline_rounded))),
-
         ],
       ),
     );

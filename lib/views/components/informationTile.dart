@@ -1,6 +1,9 @@
 import 'package:flutter/material.dart';
 
 class InformationTile extends StatelessWidget {
+  /* 
+    A custom widget for displaying information in a ListTile.
+  */  
   final String category;
   final Map<String, String> details;
 
@@ -8,6 +11,9 @@ class InformationTile extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    /* 
+      Builds the InformationTile widget.
+    */
     return ListTile(
       title: Text(category),
       subtitle: Column(

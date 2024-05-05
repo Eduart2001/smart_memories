@@ -39,14 +39,17 @@ Future<void> duplicatesImageModelHashMap(List<FileSystemEntity> entities) async 
   List<FileSystemEntity> duplicatesList=[];
   Map<String,FileSystemEntity> imageModelHashMap={};
   for (var element in entities) {
-    var f1_bytes = await File(element.path).readAsBytesSync().toString();
-    String imageHash =await compute(generateImageHash,f1_bytes)as String;
+    if(FileManager.isFile(element)){
+      var f1_bytes = await File(element.path).readAsBytesSync().toString();
+      String imageHash =await compute(generateImageHash,f1_bytes)as String;
 
-    if(imageModelHashMap.containsKey(imageHash)){
-      duplicatesList.add(element);
-    }else{
-      imageModelHashMap[imageHash]=element;
+      if(imageModelHashMap.containsKey(imageHash)){
+        duplicatesList.add(element);
+      }else{
+        imageModelHashMap[imageHash]=element;
+      }
     }
+
   }
   //await Isolate.run(() => moveToDuplicates(entities, duplicatesList));   
   await moveToDuplicates(entities, duplicatesList); 

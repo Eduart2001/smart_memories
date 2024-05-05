@@ -1,6 +1,8 @@
 // ignore_for_file: prefer_const_constructors
 import 'package:file_manager/controller/file_manager_controller.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/widgets.dart';
 import 'package:get/get.dart';
 import 'dart:io';
 import 'package:smart_memories/controllers/galleryController.dart';
@@ -23,15 +25,19 @@ class Gallery extends StatefulWidget {
 }
 
 class _GalleryState extends State<Gallery> {
+  @override
+  void initState() {
+    super.initState();
+  }
+
   List<FileSystemEntity> imageFileList = [];
 
   @override
   Widget build(BuildContext context) {
-    this.imageFileList = widget.imageFileList;
+    this.imageFileList =
+        imageFileList.isEmpty ? widget.imageFileList : imageFileList;
     return Scaffold(
       appBar: appBar(context, widget.controller, widget.base_path),
-      //  floatingActionButton: testButton(), // pour tester le rename décommenter ce boutton et commencer celui d'en bas
-      //floatingActionButton: floatingActionButton(),
       body: Center(
         child: Column(
           children: <Widget>[
@@ -48,56 +54,62 @@ class _GalleryState extends State<Gallery> {
   }
 
   Widget gridWidget() {
-    if(imageFileList.isEmpty){
-      return Center(child: Text("No images found\nFolder contains only unsupported files" , textAlign: TextAlign.center,));
+    if (imageFileList.isEmpty) {
+      return Center(
+        child: Text(
+          'No images found\nFolder contains only unsupported files',
+          textAlign: TextAlign.center,
+        ),
+      );
     }
     return GridView.builder(
-                  gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-                    crossAxisCount: 3,
+      gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+        crossAxisCount: 3,
+      ),
+      itemCount: imageFileList.length,
+      itemBuilder: (BuildContext context, int index) {
+        FileSystemEntity f = imageFileList[index];
+        return GestureDetector(
+          onTap: () async {
+            if (f is Directory) {
+              // open the folder
+              widget.controller.openDirectory(f);
+              widget.controller.setCurrentPath = f.path;
+
+              await getAllFromDirectory(widget.controller.getCurrentPath);
+              FileManagerController controller = widget.controller;
+              this.imageFileList = filteredSnapshot(this.imageFileList);
+              String base_path = widget.base_path;
+
+              Navigator.push(
+                context,
+                MaterialPageRoute(
+                  builder: (context) => Gallery(
+                    controller: controller,
+                    imageFileList: imageFileList,
+                    base_path: base_path,
                   ),
-                  itemCount: imageFileList.length,
-                  itemBuilder: (BuildContext context, int index) {
-                    FileSystemEntity f = imageFileList[index];
-                    return GestureDetector(
-                      onTap: () async {
-                        if (f is Directory) {
-                          // open the folder
-                          widget.controller.openDirectory(f);
-                          widget.controller.setCurrentPath = f.path;
-
-                          await getAllFromDirectory(
-                              widget.controller.getCurrentPath);
-                          FileManagerController controller =
-                              widget.controller;
-                          List<FileSystemEntity> imageFileList =
-                              widget.imageFileList.reversed.toList();
-                          String base_path = widget.base_path;
-
-                          Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                                builder: (context) => Gallery(
-                                      controller: controller,
-                                      imageFileList: filteredSnapshot(imageFileList),
-                                      base_path: base_path,
-                                    )),
-                          );
-                        } else {
-                          Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                              builder: (context) =>
-                                  ImageDetails(imageFile: File(f.path)),
-                            ),
-                          );
-                        }
-                      },
-                      child: displayEntity(f),
-                    );
-                  });
+                ),
+              );
+            } else {
+              Navigator.push(
+                context,
+                MaterialPageRoute(
+                  builder: (context) => ImageDetails(imageFile: File(f.path)),
+                ),
+              );
+            }
+          },
+          child: displayEntity(f),
+        );
+      },
+    );
   }
 
   displayEntity(FileSystemEntity f) {
+    /*
+      Displays a FileSystemEntity object.
+    */
     if (f is File) {
       return Image.file(
         File(f.path),
@@ -114,6 +126,9 @@ class _GalleryState extends State<Gallery> {
   }
 
   void updateGallery(File image) {
+    /*
+      Updates the gallery with the given image.
+    */
     setState(() {
       imageFileList!.add(image);
     });
@@ -127,10 +142,12 @@ class _GalleryState extends State<Gallery> {
       centerTitle: true,
       leading: IconButton(
         icon: Icon(Icons.arrow_back),
-        onPressed: () {
+        onPressed: () async {
           if (controller.getCurrentPath != base_path) {
             controller.setCurrentPath =
                 controller.getCurrentDirectory.parent.path;
+            await getAllFromDirectory(controller.getCurrentPath);
+            imageFileList = filteredSnapshot(imageFileList.reversed.toList());
           }
           Navigator.pop(context);
         },
@@ -139,27 +156,27 @@ class _GalleryState extends State<Gallery> {
   }
 
   Future getAllFromDirectory(String path) async {
+    /*
+      Gets all files and directories from the given directory.
+    */
     final dir = Directory(path);
     imageFileList.clear();
     imageFileList.addAll(await dir.list().toList());
-  }
-
-  FloatingActionButton testButton() {
-    return FloatingActionButton(
-      onPressed: () {},
-      tooltip: "Add a photo",
-      child: Icon(Icons.add_photo_alternate_outlined),
-    );
-  }
-
-  FloatingActionButton floatingActionButton() {
-    return FloatingActionButton(
-      onPressed: () {
-        pickImage(updateGallery);
-      },
-      tooltip: "Add a photo",
-      child: Icon(Icons.add_photo_alternate_outlined),
-    );
+    imageFileList.sort((a, b) {
+      // If both are directories or both are files, compare their paths
+      if ((a is File && b is File) || (a is Directory && b is Directory)) {
+        return a.path.compareTo(b.path);
+      }
+      // If a is a directory and b is a file, a comes first
+      if (a is Directory && b is File) {
+        return -1;
+      }
+      // If a is a file and b is a directory, b comes first
+      if (a is File && b is Directory) {
+        return 1;
+      }
+      return 0;
+    });
   }
 }
 
@@ -196,7 +213,7 @@ List<FileSystemEntity> filteredSnapshot(List<FileSystemEntity> snapshot) {
     List<String> parts = path.split(".");
     String extension = parts.last.toLowerCase();
     if (FileManager.isFile(snapshot[i]) &&
-        !compatibleFormats.contains(extension) ||
+            !compatibleFormats.contains(extension) ||
         basename(snapshot[i].path) == 'data' ||
         basename(snapshot[i].path) == '.thumbnails' ||
         basename(snapshot[i].path) == 'obb' ||
