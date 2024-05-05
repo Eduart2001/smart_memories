@@ -17,15 +17,15 @@ class StorageManager extends StatefulWidget {
   State<StatefulWidget> createState() => _StorageManager();
 }
 
-
 bool showGallery = false;
+
 class _StorageManager extends State<StorageManager> {
   late FileManagerController controller;
   List<FileSystemEntity> entities = [];
-
   @override
   void initState() {
-    controller = FileManagerController();
+    controller = FileManagerController(); 
+    controller.setCurrentPath = widget.base_path;
     super.initState();
   }
 
@@ -34,13 +34,40 @@ class _StorageManager extends State<StorageManager> {
     return ControlBackButton(
       controller: controller,
       child: Scaffold(
-        appBar: appBar(context, widget.base_path),
+        appBar:AppBar(
+              actions: [
+                IconButton(
+                  onPressed: () => sort(context),
+                  icon: Icon(Icons.sort_rounded),
+                ),
+              ],
+              title: ValueListenableBuilder<String>(
+                    valueListenable: controller.titleNotifier,
+                    builder: (context, title, _) {
+                      return Text(title);
+                      },
+                    ),
+              leading: IconButton(
+                icon: Icon(Icons.arrow_back),
+                onPressed: () async {
+                  if (await controller.isRootDirectory()) {
+                    Navigator.pop(context);
+                  } else {
+                    await controller.goToParentDirectory();
+                  }
+                },
+              ),
+            ),
         body: FileManager(
           controller: controller,
           builder: (context, snapshot) {
             entities = filteredSnapshot(snapshot);
-            if(entities.isEmpty){
-                return Center(child: Text("No images found\nFolder contains only unsupported files" , textAlign: TextAlign.center,));
+            if (entities.isEmpty) {
+              return Center(
+                  child: Text(
+                "No images found\nFolder contains only unsupported files",
+                textAlign: TextAlign.center,
+              ));
             }
             return ListView.builder(
               padding: EdgeInsets.symmetric(horizontal: 2, vertical: 0),
@@ -59,13 +86,12 @@ class _StorageManager extends State<StorageManager> {
                     subtitle: subtitle(entity),
                     onTap: () async {
                       if (FileManager.isDirectory(entity)) {
-                     
                         controller.openDirectory(entity);
                       } else {
                         Navigator.push(
                           context,
                           MaterialPageRoute(
-                            builder: (context) => ImageDetails( 
+                            builder: (context) => ImageDetails(
                               imageFile: File(entity.path),
                             ),
                           ),
@@ -106,36 +132,32 @@ class _StorageManager extends State<StorageManager> {
               ),
               Expanded(
                 child: OutlinedButton(
-                  onPressed: () async { 
-                  
-                  if (this.entities.isNotEmpty) {
-
-                    bool? result =await showDialog<bool>(
-                      barrierDismissible: true,
-                      context: context,
-                      builder: (context) => DropDownDemo(
-                      entities: entities,
-                      currentDirectory: controller.getCurrentPath,
-                      context: context,
-                      ),
-                    );
-                   if (showGallery) {
-                     final dir = Directory(controller.getCurrentPath);
-                      final List<FileSystemEntity> entities =
-                          await dir.list().toList();
-                      showGallery=false;
-                      Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                            builder: (context) => Gallery(
-                                  controller: controller,
-                                  imageFileList: filteredSnapshot(entities),
-                                  base_path: controller.getCurrentPath,
-                                )),
+                  onPressed: () async {
+                    if (this.entities.isNotEmpty) {
+                      bool? result = await showDialog<bool>(
+                        barrierDismissible: true,
+                        context: context,
+                        builder: (context) => DropDownDemo(
+                          entities: entities,
+                          currentDirectory: controller.getCurrentPath,
+                          context: context,
+                        ),
                       );
-                     
-                   }
-                  
+                      if (showGallery) {
+                        final dir = Directory(controller.getCurrentPath);
+                        final List<FileSystemEntity> entities =
+                            await dir.list().toList();
+                        showGallery = false;
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                              builder: (context) => Gallery(
+                                    controller: controller,
+                                    imageFileList: filteredSnapshot(entities),
+                                    base_path: controller.getCurrentPath,
+                                  )),
+                        );
+                      }
                     }
                   },
                   child: Text("Organiser"),
@@ -144,28 +166,6 @@ class _StorageManager extends State<StorageManager> {
             ],
           ),
         ),
-      ),
-    );
-  }
-
-  AppBar appBar(BuildContext context, String base_path) {
-    return AppBar(
-      actions: [
-        IconButton(
-          onPressed: () => sort(context),
-          icon: Icon(Icons.sort_rounded),
-        ),
-      ],
-      title: Text(base_path),
-      leading: IconButton(
-        icon: Icon(Icons.arrow_back),
-        onPressed: () async {
-          if (await controller.isRootDirectory()) {
-            Navigator.pop(context);
-          } else {
-            await controller.goToParentDirectory();
-          }
-        },
       ),
     );
   }
@@ -193,7 +193,7 @@ class _StorageManager extends State<StorageManager> {
     );
   }
 
-List compatibleFormats = [
+  List compatibleFormats = [
     "jpeg",
     "png",
     "jpg",
@@ -203,8 +203,8 @@ List compatibleFormats = [
     "svg",
     "JPG"
   ];
-List<FileSystemEntity> filteredSnapshot(List<FileSystemEntity> snapshot) {
-  /*
+  List<FileSystemEntity> filteredSnapshot(List<FileSystemEntity> snapshot) {
+    /*
   Filters a list of FileSystemEntity objects.
 
   This function iterates over a list of FileSystemEntity objects in reverse order,
@@ -220,22 +220,23 @@ List<FileSystemEntity> filteredSnapshot(List<FileSystemEntity> snapshot) {
   @param snapshot A list of FileSystemEntity objects to filter.
   @return The filtered list of FileSystemEntity objects.
   */
-  for (var i = snapshot.length - 1; i >= 0; i--) {
-    String path = snapshot[i].path;
-    List<String> parts = path.split(".");
-    String extension = parts.last.toLowerCase();
-    if (FileManager.isFile(snapshot[i]) &&
-        !compatibleFormats.contains(extension) ||
-        basename(snapshot[i].path) == 'data' ||
-        basename(snapshot[i].path) == '.thumbnails' ||
-        basename(snapshot[i].path) == 'obb' ||
-        (FileManager.isDirectory(snapshot[i]) &&
-            (snapshot[i] as Directory).listSync().isEmpty)) {
-      snapshot.remove(snapshot[i]);
+    for (var i = snapshot.length - 1; i >= 0; i--) {
+      String path = snapshot[i].path;
+      List<String> parts = path.split(".");
+      String extension = parts.last.toLowerCase();
+      if (FileManager.isFile(snapshot[i]) &&
+              !compatibleFormats.contains(extension) ||
+          basename(snapshot[i].path) == 'data' ||
+          basename(snapshot[i].path) == '.thumbnails' ||
+          basename(snapshot[i].path) == 'obb' ||
+          (FileManager.isDirectory(snapshot[i]) &&
+              (snapshot[i] as Directory).listSync().isEmpty)) {
+        snapshot.remove(snapshot[i]);
+      }
     }
+    return snapshot;
   }
-  return snapshot;
-}
+
   sort(BuildContext context) {
     showDialog(
       context: context,
@@ -275,43 +276,4 @@ List<FileSystemEntity> filteredSnapshot(List<FileSystemEntity> snapshot) {
       ),
     );
   }
-
-  // createFolder(BuildContext context) async {
-  //   showDialog(
-  //     context: context,
-  //     builder: (context) {
-  //       TextEditingController folderName = TextEditingController();
-  //       return Dialog(
-  //         child: Container(
-  //           padding: EdgeInsets.all(10),
-  //           child: Column(
-  //             mainAxisSize: MainAxisSize.min,
-  //             children: [
-  //               ListTile(
-  //                 title: TextField(
-  //                   controller: folderName,
-  //                 ),
-  //               ),
-  //               ElevatedButton(
-  //                 onPressed: () async {
-  //                   try {
-  //                     // Create Folder
-  //                     await FileManager.createFolder(
-  //                         controller.getCurrentPath, folderName.text);
-  //                     // Open Created Folder
-  //                     controller.setCurrentPath =
-  //                         controller.getCurrentPath + "/" + folderName.text;
-  //                   } catch (e) {}
-  //
-  //                   Navigator.pop(context);
-  //                 },
-  //                 child: Text('Create Folder'),
-  //               )
-  //             ],
-  //           ),
-  //         ),
-  //       );
-  //     },
-  //   );
-  // }
 }

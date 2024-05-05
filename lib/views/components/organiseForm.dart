@@ -47,7 +47,7 @@ class _DropDownDemoState extends State<DropDownDemo> {
         builder: (context, child) {
           return AlertDialog(
               title: const Text(
-                'Organise',
+                'Organiser',
                 style: TextStyle(fontSize: 20.0),
                 textAlign: TextAlign.center,
               ),

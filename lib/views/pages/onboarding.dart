@@ -170,10 +170,10 @@ class OnBoardingHelpUtils{
    //Pages  Descriptions 
 
    static const String description1="Navigate to one of the image folders you would like to work";
-   static const String description2 ="Cherry-pick one of the following actions : \n - Gallery \n - Organisation \n \n (*note: for this tutorial the Organisation action is selected)";
+   static const String description2 ="Cherry-pick one of the following actions : \n - Gallery \n - Organiser \n \n (*note: for this tutorial the Organiser action is selected)";
    static const String description3 ="Select how you would like to organise your images, by year, month, day, location, created date and also isolate duplicates";
    static const String description4 ="Depending on the size of the directory it might take a while to load all the images. \n *** Warning: By using this app, you acknowledge and accept that you do so at your own risk. We shall not be liable for any damages or losses resulting from the use of this app. Please use it responsibly and exercise caution while using its features. ***";
-   static const String description5 ="To avoid any data loss, please download these images and make changes on this demo folder\n These images have been taken from the internet  and they are used only used to manipulate with the application. Their exif data has been modified by a scrip, writen by us. \n To download the images just follow the link and download frome Google Drive.";
+   static const String description5 ="To avoid any data loss, please download these images and make changes on this demo folder\n These images have been taken from the internet  and they are used only used to manipulate with the application. Their exif data has been modified by a scrip, writen by us. \n To download the images just follow the link and download from Google Drive.";
   // Image 
 
   static const String image1 = 'assets/onBoardingTutorial/tutorial1.gif';
