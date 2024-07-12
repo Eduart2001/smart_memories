@@ -1,16 +1,36 @@
 # smart_memories
+## <img src="./assets/icons/SMLogo.png" width="150" height="150"/>
 
-A new Flutter project.
 
-## Getting Started
+## Project Description
+  Smart Memories is an android application that helps you organize your images, in different folders based on the criteria you chose.
+  
+## Project Demo
+  [Smart Memories is an android application that helps you organize your images, in different folders based on the criteria you chose.](https://www.youtube.com/watch?v=FY3oQPlaU2w&ab_channel=Isai734)
+  
+---
 
-This project is a starting point for a Flutter application.
+## How to use?
+-ON AN ANDROID DEVICE
+  1. Get the apk file : build\app\outputs\apk\release\app-release.apk
+  2. Install the apk on your device and follow the instructions.
 
-A few resources to get you started if this is your first Flutter project:
+-ON EMULATOR
+  1. Download the project package
+  2. Download and install Flutter and Android SDK
+  3. Launch your emulator
+  4. On the folder terminal run "flutter run --release"
 
-- [Lab: Write your first Flutter app](https://docs.flutter.dev/get-started/codelab)
-- [Cookbook: Useful Flutter samples](https://docs.flutter.dev/cookbook)
+## Flutter Doc
+-https://docs.flutter.dev/
 
-For help getting started with Flutter development, view the
-[online documentation](https://docs.flutter.dev/), which offers tutorials,
-samples, guidance on mobile development, and a full API reference.
+---
+
+## Authors
+
+| Name    | Last name        | Email address                         |
+| ------- | ---------------- | ------------------------------------- |
+| Eduart  | Abdullahu        | eduart.abdullahu@student.uclouvain.be |
+| Isaías | Antúnez García | isaias.antunez@student.uclouvain.be   |
+| Lyse  |  Grolaux        | lyse.grolaux@student.uclouvain.be   |
+| Tom  |  Byloos        | tom.byloos@student.uclouvain.be  |
