@@ -34,7 +34,6 @@ dependencies:
   exif: ^3.3.0
   path: ^1.8.2
   path_provider: ^2.1.2
-  flutter_easy_permission: ^1.1.2
   permission_handler: ^11.3.0
   image: ^4.1.7
   google_fonts: ^6.2.1
